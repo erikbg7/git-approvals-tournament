@@ -4,6 +4,8 @@ export type GitlabProject = { id: number; name: string };
 
 export type GitlabUser = { id: number; name: string };
 
+export type GitlabApprovalEvent = { author: GitlabUser };
+
 const getOptions = (token: string) => ({
   method: 'GET',
   headers: {
@@ -54,7 +56,10 @@ export const getAllProjectsMembers = async (token: string, projectIds: string[])
   return Object.values(tournamentContestants);
 };
 
-export const getProjectEvents = async (token: string, projectId: string) => {
+export const getProjectEvents = async (
+  token: string,
+  projectId: string
+): Promise<GitlabApprovalEvent[]> => {
   const events = await fetcher(token, `/projects/${projectId}/events?action=approved`);
   return events;
 };

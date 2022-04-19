@@ -1,47 +1,38 @@
 import React from 'react';
 import type { NextPage } from 'next';
-import Head from 'next/head';
-import Image from 'next/image';
-import { Button, Text, Flex, Heading, VStack } from '@chakra-ui/react';
-import { signIn, useSession } from 'next-auth/react';
-import { useEffect } from 'react';
-import { getOrganizations, getProjects, GitlabProject } from '../services/gitlab-api';
+import { Button, Text, Flex, Heading, VStack, HStack } from '@chakra-ui/react';
+import { signIn } from 'next-auth/react';
 
 const Home: NextPage = () => {
-  const { data: session, status } = useSession();
-  const [projects, setProjects] = React.useState<GitlabProject[]>([]);
-
-  //@ts-ignore
-  const { accessToken } = session || {};
-
-  // useEffect(() => {
-  //   (async () => {
-  //     if (status === 'authenticated' && accessToken) {
-  //       const gitlabOrganizations = await getOrganizations(accessToken);
-  //       const gitlabProjects = await getProjects(accessToken, gitlabOrganizations[0]);
-  //       setProjects(gitlabProjects);
-  //     }
-  //   })();
-  // }, [status, accessToken]);
-
-  if (status === 'authenticated' && projects.length) {
-    return (
-      <div>
-        {projects.map((p) => (
-          <Text>{p.name}</Text>
-        ))}
-      </div>
-    );
-  }
-
   return (
     <Flex h={'100vh'} w={'100vw'} justifyContent={'center'}>
       <VStack>
-        <Heading as={'h1'}>
-          <Text>Welcome to the Gitalb</Text>
-          <Text>approvers tournament</Text>
+        <HStack>
+          <Text as={'p'} fontSize={'7xl'}>
+            🏆
+          </Text>
+          <Heading as={'h1'}>
+            <Text>Welcome to the Gitalb</Text>
+            <Text>approvers tournament</Text>
+          </Heading>
+          <Text as={'p'} fontSize={'7xl'}>
+            🏆
+          </Text>
+        </HStack>
+        <Button onClick={() => signIn('gitlab', { callbackUrl: '/tournament' })}>
+          Sign in with Gitlab
+        </Button>
+        <Heading as={'h2'} size={'md'}>
+          What is this?
         </Heading>
-        <Button onClick={() => signIn('gitlab')}>Sign in</Button>
+        <Text>
+          This is a minigame from the company that aims to increase the motivation of the team to
+          review the open PRs.
+        </Text>
+        <Text>
+          In order to achieve it, we will check who is the member of the team that approves and code
+          reviews less, and find a funny punishment for him or her.
+        </Text>
       </VStack>
     </Flex>
   );
