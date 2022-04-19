@@ -1,32 +1,18 @@
-import React, { useEffect } from 'react';
-import Link from 'next/link';
-import { getToken } from 'next-auth/jwt';
-import { GetServerSideProps } from 'next';
-import {
-  getAllProjectsMembers,
-  getOrganizations,
-  getProjectEvents,
-  getProjects,
-  GitlabGroup,
-  GitlabProject,
-  GitlabUser,
-} from '../../services/gitlab-api';
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
-  Box,
-  Progress,
-  useToast,
-} from '@chakra-ui/react';
+import React, { useCallback, useState } from 'react';
+import type { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
+import { getToken } from 'next-auth/jwt';
+import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, useToast } from '@chakra-ui/react';
+
+import type { GitlabGroup, GitlabProject, GitlabUser } from '../../models/gitlab';
+import type { QueryParams, UserWithApprovals } from '../../models/tournament';
 import { Organizations } from '../../components/Organizations';
 import { Projects } from '../../components/Projects';
 import { Members } from '../../components/Members';
-import { getSession } from 'next-auth/react';
-import { useProgressBar } from '../../hooks/useProgressBar';
-import { AnimatePresence } from 'framer-motion';
+import { Results } from '../../components/Results';
+import { getAllProjectsMembers, getOrganizations, getProjects } from '../../services/gitlab-api';
+import { buildErrorToast, sortByApprovalsAmount } from '../../utils';
+import { getApprovalsByUser } from '../../services/tournament-api';
 
 type Props = {
   organizations: GitlabGroup[];
@@ -35,37 +21,34 @@ type Props = {
 };
 
 const Index: React.FC<Props> = ({ organizations = [], projects = [], members = [] }) => {
-  const { query } = useRouter();
   const toast = useToast();
-  const { isRequestInProgress } = useProgressBar();
-
-  console.warn({ query, isRequestInProgress });
+  const { query } = useRouter();
+  const [results, setResults] = useState<UserWithApprovals[]>([]);
 
   const hasOrganization = !!query.organization;
   const hasProjects = !!query.projects;
   const hasError = !!query.error;
+  const hasResults = !!results.length;
 
-  // useEffect(() => {
-  //   if (hasError) {
-  //     toast({
-  //       id: 'error-toast',
-  //       title: 'Gitlab Error',
-  //       description: 'There was an error processing the request.',
-  //       status: 'error',
-  //       duration: 5000,
-  //       isClosable: true,
-  //     });
-  //   }
-  // }, []);
+  // useEffect(() => { hasError && toast(buildErrorToast());}, []);
+
+  const handleTournamentStart = useCallback(async (members: GitlabUser[], projects: string[]) => {
+    try {
+      const approvalsByUser = await getApprovalsByUser(members, projects);
+      setResults(sortByApprovalsAmount(approvalsByUser));
+    } catch (error) {
+      toast(buildErrorToast());
+    }
+  }, []);
 
   return (
-    <Box height={'100vh'} textAlign={'center'}>
-      {isRequestInProgress && (
-        <Progress position={'absolute'} top={0} w={'100vw'} size="sm" isIndeterminate />
+    <Box height={'100vh'} display={'flex'} alignItems={'center'} justifyContent={'center'} p={6}>
+      {hasResults && <Results users={results} />}
+      {!hasResults && !hasOrganization && <Organizations organizations={organizations} />}
+      {!hasResults && hasOrganization && !hasProjects && <Projects projects={projects} />}
+      {!hasResults && hasOrganization && hasProjects && (
+        <Members members={members} onTournamentStart={handleTournamentStart} />
       )}
-      {!hasOrganization && <Organizations organizations={organizations} />}
-      {hasOrganization && !hasProjects && <Projects projects={projects} />}
-      {hasOrganization && hasProjects && <Members members={members} />}
       {hasError && (
         <Alert status="error">
           <AlertIcon />
@@ -77,64 +60,36 @@ const Index: React.FC<Props> = ({ organizations = [], projects = [], members = [
   );
 };
 
-type QueryParamsType = {
-  organization?: string;
-  projects?: string;
-};
-
-// get static props for component
 const getServerSideProps: GetServerSideProps = async (context) => {
-  // console.warn('query', context.query);
   try {
     const token = await getToken(context);
-    const session = await getSession(context);
-    const params = context.query as QueryParamsType;
-    const isSessionActive = token && token.accessToken;
-
-    let organizations: GitlabGroup[] = [];
-    let projects: GitlabGroup[] = [];
-    let members: GitlabUser[] = [];
-
-    console.warn({ token, session });
+    const accessToken = token?.accessToken as string;
+    const params = context.query as QueryParams;
+    const isSessionActive = token && accessToken;
 
     if (isSessionActive && !params.organization) {
-      organizations = await getOrganizations(token.accessToken as string);
+      const organizations = (await getOrganizations(accessToken)) || [];
       return { props: { organizations } };
     }
 
-    if (isSessionActive && !params.projects) {
-      projects = await getProjects(
-        token.accessToken as string,
-        params.organization as unknown as number
-      );
+    if (isSessionActive && params.organization && !params.projects) {
+      const projects = await getProjects(accessToken, params.organization);
       return { props: { projects } };
     }
 
     if (isSessionActive && params.organization && params.projects) {
       const projectIdsList = params.projects.split(',');
-
-      projectIdsList.map(async (projectId) => {
-        const approvals = await getProjectEvents(
-          token.accessToken as string,
-          projectId as unknown as string
-        );
-        console.warn({ approvals });
-        console.warn(approvals[0].author);
-      });
-
-      members = await getAllProjectsMembers(token.accessToken as string, projectIdsList);
+      const members = await getAllProjectsMembers(accessToken, projectIdsList);
       return { props: { members: Array.from(members) } };
     }
 
     return {
-      props: { organizations },
+      redirect: { permanent: false, destination: '/' },
+      props: {},
     };
   } catch (error) {
     return {
-      redirect: {
-        permanent: false,
-        destination: '/tournament?error=gitlabError',
-      },
+      redirect: { permanent: false, destination: '/tournament?error=gitlabError' },
       props: {},
     };
   }

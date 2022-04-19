@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getProjectEvents, GitlabProject, GitlabUser } from '../../services/gitlab-api';
+import type { GitlabUser } from '../../models/gitlab';
+import { getProjectEvents } from '../../services/gitlab-api';
 import { getToken } from 'next-auth/jwt';
 
 type UserWithApprovals = GitlabUser & { approvals: number };

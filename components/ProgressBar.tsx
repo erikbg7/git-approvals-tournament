@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import { Progress } from '@chakra-ui/react';
 import Router from 'next/router';
 
-export const useProgressBar = () => {
-  const [loading, setLoading] = useState(false);
+const ProgressBar = () => {
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const start = () => {
-      console.log('start');
-      setLoading(true);
-    };
-    const end = () => {
-      console.log('findished');
-      setLoading(false);
-    };
+    const start = () => setIsLoading(true);
+    const end = () => setIsLoading(false);
+
     Router.events.on('routeChangeStart', start);
     Router.events.on('routeChangeComplete', end);
     Router.events.on('routeChangeError', end);
@@ -23,5 +19,11 @@ export const useProgressBar = () => {
     };
   }, []);
 
-  return { isRequestInProgress: loading };
+  if (isLoading) {
+    return <Progress position={'absolute'} top={0} w={'100vw'} size="sm" isIndeterminate />;
+  }
+
+  return null;
 };
+
+export { ProgressBar };

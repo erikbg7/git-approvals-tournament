@@ -1,22 +1,29 @@
 import React from 'react';
-import { useRouter } from 'next/router';
-import { GitlabUser } from '../services/gitlab-api';
-import { Button, Text, Heading, VStack } from '@chakra-ui/react';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/router';
+import { Button, Text, Heading, VStack } from '@chakra-ui/react';
+import type { GitlabUser } from '../models/gitlab';
 
-const Members = ({ members }: { members: GitlabUser[] }) => {
-  const { pathname, query } = useRouter();
+type Props = {
+  members: GitlabUser[];
+  onTournamentStart(members: GitlabUser[], projects: string[]): void;
+};
+
+const Members = ({ members, onTournamentStart }: Props) => {
+  const { query } = useRouter();
   const [selectedMembers, setSelectedMembers] = React.useState<GitlabUser[]>([]);
 
   const projects = query.projects as string;
   const projectsIds = projects.split(',');
 
+  const handleSelectedMember = (member: GitlabUser) => () => {
+    setSelectedMembers((prev) => [...prev, member]);
+  };
+
   return (
     <VStack
       as={motion.div}
       justifyContent={'center'}
-      height={'100vh'}
       transition="0.5s linear"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -26,35 +33,19 @@ const Members = ({ members }: { members: GitlabUser[] }) => {
       <Heading as={'h2'} size={'md'}>
         Select the tournament participants:
       </Heading>
-      {members.map((member) => (
-        <Button key={member.id} onClick={() => setSelectedMembers((prev) => [...prev, member])}>
-          {member.name}
-        </Button>
-        // <Link key={member.id} href={{ pathname }}>
-        //   <a>{member.name}</a>
-        // </Link>
-      ))}
+      {members.map((member) => {
+        const isSelected = !!selectedMembers.find((m) => m.id === member.id);
+
+        return (
+          <Button disabled={isSelected} key={member.id} onClick={handleSelectedMember(member)}>
+            {member.name}
+          </Button>
+        );
+      })}
 
       <Text>{selectedMembers.length} members selected</Text>
 
-      <Button
-        onClick={() => {
-          console.warn({ selectedMembers });
-
-          fetch('/api/counter', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              projects: projectsIds,
-              members: selectedMembers,
-            }),
-          })
-            .then((res) => res.json())
-            .then((data) => console.warn({ data }));
-        }}
-      >
+      <Button onClick={() => onTournamentStart(selectedMembers, projectsIds)}>
         Start approvals counting
       </Button>
     </VStack>

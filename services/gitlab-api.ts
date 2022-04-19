@@ -1,10 +1,4 @@
-export type GitlabGroup = { id: number; name: string };
-
-export type GitlabProject = { id: number; name: string };
-
-export type GitlabUser = { id: number; name: string };
-
-export type GitlabApprovalEvent = { author: GitlabUser };
+import type { GitlabGroup, GitlabUser, GitlabProject, GitlabApprovalEvent } from '../models';
 
 const getOptions = (token: string) => ({
   method: 'GET',
@@ -20,18 +14,12 @@ const fetcher = (token: string, pathUrl: string) =>
 
 export const getOrganizations = async (token: string): Promise<GitlabGroup[]> => {
   const groups = await fetcher(token, '/groups');
-  return groups.map((group: GitlabGroup) => ({
-    id: group.id,
-    name: group.name,
-  }));
+  return groups.map((group: GitlabGroup) => ({ id: group.id, name: group.name }));
 };
 
-export async function getProjects(token: string, groupId: number): Promise<GitlabProject[]> {
+export async function getProjects(token: string, groupId: string): Promise<GitlabProject[]> {
   const projects = await fetcher(token, `/groups/${groupId}/projects`);
-  return projects.map((project: GitlabProject) => ({
-    id: project.id,
-    name: project.name,
-  }));
+  return projects.map((project: GitlabProject) => ({ id: project.id, name: project.name }));
 }
 
 export const getAllProjectsMembers = async (token: string, projectIds: string[]) => {
@@ -41,11 +29,6 @@ export const getAllProjectsMembers = async (token: string, projectIds: string[])
 
   let tournamentContestants: Record<string, GitlabUser> = {};
   const members = await Promise.all(membersRequests);
-
-  console.warn({ members });
-
-  // members[0].push({ id: 9999999999, name: 'test1' });
-  // members[1].push({ id: 8888888888, name: 'test2' });
 
   const allProjectsMembers = members.flat(2);
 

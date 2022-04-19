@@ -1,9 +1,9 @@
 import React from 'react';
-import { useRouter } from 'next/router';
-import { GitlabProject } from '../services/gitlab-api';
-import { Button, Heading, Text, VStack } from '@chakra-ui/react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/router';
+import { Button, Heading, VStack } from '@chakra-ui/react';
+import type { GitlabProject } from '../models/gitlab';
 
 const Projects = ({ projects }: { projects: GitlabProject[] }) => {
   const { pathname, query } = useRouter();
@@ -25,7 +25,10 @@ const Projects = ({ projects }: { projects: GitlabProject[] }) => {
         Select the projects from which to read the approvals:
       </Heading>
       {projects.map((project) => (
-        <Button onClick={() => setProjectsIds((ids) => [...ids, project.id.toString()])}>
+        <Button
+          disabled={projectsIds.includes(project.id.toString())}
+          onClick={() => setProjectsIds((ids) => [...ids, project.id.toString()])}
+        >
           {project.name}
         </Button>
       ))}
@@ -35,9 +38,10 @@ const Projects = ({ projects }: { projects: GitlabProject[] }) => {
           query: { organization: query.organization, projects: projectsIds.join(',') },
         }}
       >
-        <a>Select Contestants</a>
+        <Button disabled={!projectsIds.length} colorScheme={'blue'} variant={'outline'}>
+          Done!
+        </Button>
       </Link>
-      <Text>{projectsIds.join(',') || 'no projects selected'}</Text>
     </VStack>
   );
 };
