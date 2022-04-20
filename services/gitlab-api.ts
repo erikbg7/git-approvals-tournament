@@ -1,4 +1,4 @@
-import type { GitlabGroup, GitlabUser, GitlabProject, GitlabApprovalEvent } from '../models';
+import type { GitlabGroup, GitlabUser, GitlabProject, GitlabApprovalEvent } from '../models/gitlab';
 
 const getOptions = (token: string) => ({
   method: 'GET',

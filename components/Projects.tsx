@@ -2,8 +2,16 @@ import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
-import { Button, Heading, VStack } from '@chakra-ui/react';
+import { Box, Button, Heading, VStack } from '@chakra-ui/react';
 import type { GitlabProject } from '../models/gitlab';
+
+type AvatarProps = {
+  color?: string;
+  iconFallback?: React.ReactNode;
+  iconName: string;
+  iconSize?: number;
+  onClick: Function;
+};
 
 const Projects = ({ projects }: { projects: GitlabProject[] }) => {
   const { pathname, query } = useRouter();
@@ -13,7 +21,6 @@ const Projects = ({ projects }: { projects: GitlabProject[] }) => {
     <VStack
       as={motion.div}
       justifyContent={'center'}
-      height={'100vh'}
       initial={{ y: 30, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       // @ts-ignore
@@ -24,6 +31,7 @@ const Projects = ({ projects }: { projects: GitlabProject[] }) => {
       <Heading as={'h2'} size={'md'}>
         Select the projects from which to read the approvals:
       </Heading>
+
       {projects.map((project) => (
         <Button
           disabled={projectsIds.includes(project.id.toString())}
