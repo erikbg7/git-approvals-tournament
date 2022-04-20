@@ -32,6 +32,11 @@ export const getAllProjectsMembers = async (token: string, projectIds: string[])
 
   const allProjectsMembers = members.flat(2);
 
+  console.warn({ allProjectsMembers });
+  if (allProjectsMembers?.[0]?.error) {
+    throw new Error('token expired');
+  }
+
   allProjectsMembers.forEach((member: GitlabUser) => {
     tournamentContestants[member.id] = member;
   });

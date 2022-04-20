@@ -68,8 +68,8 @@ const Steps: React.FC<StepsProps> = ({ resolve }) => {
   const isStepDone = (step: number) => step < currentStep;
 
   return (
-    <VStack mx={'auto'} my={20}>
-      <HStack w={'90vw'}>
+    <VStack mx={'auto'} mb={20} mt={7}>
+      <HStack w={'90vw'} maxW={'3xl'}>
         <Step label={'1'} isActive={isStep(1)} isCompleted={isStepsAfter([1])} />
         <Text fontSize={'lg'} fontWeight={'bold'}>
           Organization

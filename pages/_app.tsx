@@ -4,6 +4,7 @@ import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import { SessionProvider } from 'next-auth/react';
 import { AnimatePresence } from 'framer-motion';
 import { ProgressBar } from '../components/ProgressBar';
+import { NavBar } from '../components/NavBar';
 
 const colors = {
   base: {
@@ -37,9 +38,11 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
     <SessionProvider session={session}>
       <ChakraProvider resetCSS theme={theme}>
         <ProgressBar />
-        <AnimatePresence exitBeforeEnter initial={true}>
-          <Component {...pageProps} />
-        </AnimatePresence>
+        <NavBar>
+          <AnimatePresence exitBeforeEnter initial={true}>
+            <Component {...pageProps} />
+          </AnimatePresence>
+        </NavBar>
       </ChakraProvider>
     </SessionProvider>
   );

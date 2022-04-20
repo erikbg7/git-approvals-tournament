@@ -1,20 +1,18 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { Button, Text, Heading, VStack, Box } from '@chakra-ui/react';
 import type { GitlabUser } from '../models/gitlab';
 
 type Props = {
   members: GitlabUser[];
-  onTournamentStart(members: GitlabUser[], projects: string[]): void;
+  onTournamentStart(members: GitlabUser[]): void;
 };
 
 const Members = ({ members, onTournamentStart }: Props) => {
-  const { query } = useRouter();
+  const { pathname, query } = useRouter();
   const [selectedMembers, setSelectedMembers] = React.useState<GitlabUser[]>([]);
-
-  const projects = query.projects as string;
-  const projectsIds = projects.split(',');
 
   const handleSelectedMember = (member: GitlabUser) => () => {
     setSelectedMembers((prev) => [...prev, member]);
@@ -29,7 +27,7 @@ const Members = ({ members, onTournamentStart }: Props) => {
       exit={{ y: 60, opacity: 0 }}
     >
       <Heading as={'h1'}>Members</Heading>
-      <Heading as={'h2'} size={'md'}>
+      <Heading as={'h2'} size={'md'} color={'whiteAlpha.700'}>
         Select the tournament participants:
       </Heading>
       <Box display={'flex'} flexWrap={'wrap'} justifyContent={'center'} maxW={'xl'}>
@@ -50,9 +48,14 @@ const Members = ({ members, onTournamentStart }: Props) => {
       </Box>
       <Text>{selectedMembers.length} members selected</Text>
 
-      <Button onClick={() => onTournamentStart(selectedMembers, projectsIds)}>
-        Start approvals counting
-      </Button>
+      <Link
+        href={{
+          pathname,
+          query: { organization: query.organization, projects: query.projects, results: true },
+        }}
+      >
+        <Button onClick={() => onTournamentStart(selectedMembers)}>Start approvals counting</Button>
+      </Link>
     </VStack>
   );
 };

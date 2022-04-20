@@ -19,7 +19,7 @@ const Organizations = ({ organizations }: { organizations: GitlabGroup[] }) => {
       transition={{ duration: 0.8, delay: 300 }}
     >
       <Heading as={'h1'}>Organizations</Heading>
-      <Heading as={'h2'} size={'md'}>
+      <Heading as={'h2'} size={'md'} color={'whiteAlpha.700'}>
         Choose an organization to participate in the tournament
       </Heading>
       {organizations.map((organization) => (

@@ -28,7 +28,7 @@ const Projects = ({ projects }: { projects: GitlabProject[] }) => {
       // transition={{ duration: 5.8, delay: 2000 }}
     >
       <Heading as={'h1'}>Projects</Heading>
-      <Heading as={'h2'} size={'md'}>
+      <Heading as={'h2'} size={'md'} color={'whiteAlpha.700'}>
         Select the projects from which to read the approvals:
       </Heading>
 

@@ -1,4 +1,5 @@
-import type { GitlabUser, UserWithApprovals } from '../models';
+import type { GitlabUser } from '../models/gitlab';
+import type { UserWithApprovals } from '../models/tournament';
 
 const getApprovalsByUser = (
   members: GitlabUser[],
