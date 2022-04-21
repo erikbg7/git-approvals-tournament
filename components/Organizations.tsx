@@ -2,8 +2,9 @@ import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
-import { Heading, VStack, Text } from '@chakra-ui/react';
+import { Button, Heading, VStack } from '@chakra-ui/react';
 import type { GitlabGroup } from '../models/gitlab';
+import { OrganizationCard } from './OrganizationCard';
 
 const Organizations = ({ organizations }: { organizations: GitlabGroup[] }) => {
   const { pathname } = useRouter();
@@ -22,11 +23,12 @@ const Organizations = ({ organizations }: { organizations: GitlabGroup[] }) => {
       <Heading as={'h2'} size={'md'} color={'whiteAlpha.700'}>
         Choose an organization to participate in the tournament
       </Heading>
+      <br />
       {organizations.map((organization) => (
         <Link key={organization.id} href={{ pathname, query: { organization: organization.id } }}>
-          <Text as={'a'} color={'blue.400'} fontSize={'xl'}>
+          <Button p={10} color={'#fc6d26'} fontSize={'xl'} fontWeight={'bold'}>
             {organization.name}
-          </Text>
+          </Button>
         </Link>
       ))}
     </VStack>

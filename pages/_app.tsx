@@ -17,6 +17,10 @@ const config = {
   initialColorMode: 'dark',
 };
 
+const shadows = {
+  outline: 'none',
+};
+
 const styles = {
   global: {
     body: {
@@ -31,7 +35,7 @@ const styles = {
   },
 };
 
-const theme = extendTheme({ colors, config, styles });
+const theme = extendTheme({ colors, config, styles, shadows });
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (

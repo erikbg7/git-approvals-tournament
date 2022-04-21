@@ -14,6 +14,11 @@ const fetcher = (token: string, pathUrl: string) =>
 
 export const getOrganizations = async (token: string): Promise<GitlabGroup[]> => {
   const groups = await fetcher(token, '/groups');
+  console.warn('sadknmsjkn');
+  console.warn({ groups });
+  if (groups?.error) {
+    throw new Error(groups.error);
+  }
   return groups.map((group: GitlabGroup) => ({ id: group.id, name: group.name }));
 };
 

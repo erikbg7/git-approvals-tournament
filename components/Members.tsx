@@ -30,6 +30,7 @@ const Members = ({ members, onTournamentStart }: Props) => {
       <Heading as={'h2'} size={'md'} color={'whiteAlpha.700'}>
         Select the tournament participants:
       </Heading>
+      <br />
       <Box display={'flex'} flexWrap={'wrap'} justifyContent={'center'} maxW={'xl'}>
         {members.map((member) => {
           const isSelected = !!selectedMembers.find((m) => m.id === member.id);
@@ -46,16 +47,32 @@ const Members = ({ members, onTournamentStart }: Props) => {
           );
         })}
       </Box>
-      <Text>{selectedMembers.length} members selected</Text>
-
-      <Link
-        href={{
-          pathname,
-          query: { organization: query.organization, projects: query.projects, results: true },
-        }}
-      >
-        <Button onClick={() => onTournamentStart(selectedMembers)}>Start approvals counting</Button>
-      </Link>
+      <br />
+      {!!selectedMembers.length && (
+        <Link
+          href={{
+            pathname,
+            query: { organization: query.organization, projects: query.projects, results: true },
+          }}
+        >
+          <Button
+            as={motion.div}
+            initial={{ y: 5, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            // @ts-ignore
+            transition={{ duration: 0.1 }}
+            // transition={{ duration: 0.5 }}
+            padding={4}
+            width={'50%'}
+            onClick={() => onTournamentStart(selectedMembers)}
+            color={'#fc6d26'}
+            borderColor={'#fc6d26'}
+            variant={'outline'}
+          >
+            Start approvals counting
+          </Button>
+        </Link>
+      )}
     </VStack>
   );
 };

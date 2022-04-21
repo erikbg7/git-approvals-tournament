@@ -38,12 +38,12 @@ const Results: React.FC<Props> = (props) => {
   //     onCleanUp();
   //   };
   // }, []);
-  useEffect(() => {
-    Router.events.on('routeChangeComplete', onCleanUp);
-    return () => {
-      Router.events.off('routeChangeComplete', onCleanUp);
-    };
-  }, []);
+  // useEffect(() => {
+  //   Router.events.on('routeChangeComplete', onCleanUp);
+  //   return () => {
+  //     Router.events.off('routeChangeComplete', onCleanUp);
+  //   };
+  // }, []);
 
   useEffect(() => {
     console.warn('results', users);

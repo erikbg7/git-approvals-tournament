@@ -18,9 +18,9 @@ const Step: React.FC<StepProps> = ({ label, isActive, isCompleted }) => {
     <Circle
       size="40px"
       color="white"
-      bg={isCompleted ? 'blue.400' : 'whiteAlpha.300'}
+      bg={isCompleted ? '#fc6d26' : 'whiteAlpha.300'}
       borderWidth={isActive || isCompleted ? 2 : 0}
-      borderColor={'blue.400'}
+      borderColor={'#fc6d26'}
       transition={'all 0.2s ease-in-out'}
     >
       <CheckIcon display={isCompleted ? 'inherit' : 'none'} />
@@ -34,7 +34,7 @@ const Step: React.FC<StepProps> = ({ label, isActive, isCompleted }) => {
 const StepDivider: React.FC<StepDividerProps> = ({ isCompleted }) => {
   return (
     <Divider
-      bgColor={isCompleted ? 'blue.400' : 'whiteAlpha.300'}
+      bgColor={isCompleted ? '#fc6d26' : 'whiteAlpha.300'}
       borderBottomWidth={2}
       orientation="horizontal"
       transition={'all 0.2s ease-in-out'}
@@ -68,7 +68,7 @@ const Steps: React.FC<StepsProps> = ({ resolve }) => {
   const isStepDone = (step: number) => step < currentStep;
 
   return (
-    <VStack mx={'auto'} mb={20} mt={7}>
+    <VStack mx={'auto'} mb={20} mt={7} display={{ base: 'none', sm: 'none', md: 'inherit' }}>
       <HStack w={'90vw'} maxW={'3xl'}>
         <Step label={'1'} isActive={isStep(1)} isCompleted={isStepsAfter([1])} />
         <Text fontSize={'lg'} fontWeight={'bold'}>
@@ -80,7 +80,7 @@ const Steps: React.FC<StepsProps> = ({ resolve }) => {
           Projects
         </Text>
         <StepDivider isCompleted={isStepDone(2)} />
-        <Step label={'3'} isActive={isStep(3)} isCompleted={resolve} />
+        <Step label={'3'} isActive={isStep(3)} isCompleted={isStepsAfter([2]) && resolve} />
         <Text fontSize={'lg'} fontWeight={'bold'}>
           Members
         </Text>

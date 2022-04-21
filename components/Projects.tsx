@@ -31,25 +31,46 @@ const Projects = ({ projects }: { projects: GitlabProject[] }) => {
       <Heading as={'h2'} size={'md'} color={'whiteAlpha.700'}>
         Select the projects from which to read the approvals:
       </Heading>
-
+      <br />
       {projects.map((project) => (
         <Button
           disabled={projectsIds.includes(project.id.toString())}
           onClick={() => setProjectsIds((ids) => [...ids, project.id.toString()])}
+          p={5}
+          width={'80%'}
+          color={'#fc6d26'}
+          fontSize={'xl'}
+          fontWeight={'bold'}
         >
           {project.name}
         </Button>
       ))}
-      <Link
-        href={{
-          pathname,
-          query: { organization: query.organization, projects: projectsIds.join(',') },
-        }}
-      >
-        <Button disabled={!projectsIds.length} colorScheme={'blue'} variant={'outline'}>
-          Done!
-        </Button>
-      </Link>
+      <br />
+      {!!projectsIds.length && (
+        <Link
+          href={{
+            pathname,
+            query: { organization: query.organization, projects: projectsIds.join(',') },
+          }}
+        >
+          <Button
+            as={motion.div}
+            initial={{ y: 5, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            // @ts-ignore
+            transition={{ duration: 0.1 }}
+            // transition={{ duration: 0.5 }}
+            padding={4}
+            width={'50%'}
+            disabled={!projectsIds.length}
+            color={'#fc6d26'}
+            borderColor={'#fc6d26'}
+            variant={'outline'}
+          >
+            Done!
+          </Button>
+        </Link>
+      )}
     </VStack>
   );
 };
