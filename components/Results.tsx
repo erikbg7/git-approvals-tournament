@@ -1,73 +1,70 @@
 import React, { useEffect } from 'react';
 import {
   VStack,
-  HStack,
   Text,
   useToast,
   Heading,
   useWhyDidYouUpdate,
   TableContainer,
   Table,
-  TableCaption,
   Thead,
   Tr,
   Th,
   Td,
   Tbody,
+  Spinner,
 } from '@chakra-ui/react';
 import type { UserWithApprovals } from '../models/tournament';
 import type { GitlabUser } from '../models/gitlab';
 import { getApprovalsByUser } from '../services/tournament-api';
 import { buildErrorToast, sortByApprovalsAmount } from '../utils';
-import Router, { useRouter } from 'next/router';
+import { ErrorAlert } from './ErrorAlert';
 
 type Props = {
   users: GitlabUser[];
   projects: string;
-  onCleanUp: () => void;
 };
 
 const Results: React.FC<Props> = (props) => {
   useWhyDidYouUpdate('results', props);
-  const { users, onCleanUp, projects } = props;
+  const { users, projects } = props;
   const toast = useToast();
   const [results, setResults] = React.useState<UserWithApprovals[]>([]);
-
-  // useEffect(() => {
-  //   return () => {
-  //     onCleanUp();
-  //   };
-  // }, []);
-  // useEffect(() => {
-  //   Router.events.on('routeChangeComplete', onCleanUp);
-  //   return () => {
-  //     Router.events.off('routeChangeComplete', onCleanUp);
-  //   };
-  // }, []);
+  const [isLoading, setIsLoading] = React.useState(true);
 
   useEffect(() => {
-    console.warn('results', users);
     (async () => {
       try {
-        // if (!!users.length) {
-        // const projects = query.projects as string;
         const approvalsByUser = await getApprovalsByUser(users, projects.split(','));
-        // if (approvalsByUser.length <= 0) {
-        //   return back();
-        // }
         setResults(sortByApprovalsAmount(approvalsByUser));
-        // }
+        setIsLoading(false);
       } catch (error) {
+        setIsLoading(false);
         toast(buildErrorToast());
       }
     })();
   }, [users]);
 
+  // TODO: use orange color in table and fix styles of results
+
   return (
     <VStack>
       <Heading as={'h1'}>Results</Heading>
-      {!results.length && <Text>Getting tournament results...</Text>}
-      {!!results.length && (
+      {isLoading && (
+        <>
+          <Text fontSize={'2xl'}>Getting results form last 15 days...</Text>
+          <Spinner
+            boxSize={24}
+            thickness="4px"
+            speed="0.65s"
+            emptyColor="gray.800"
+            color="#fc6d26"
+            size="xl"
+          />
+        </>
+      )}
+      {!isLoading && !results.length && <ErrorAlert />}
+      {!isLoading && !!results.length && (
         <TableContainer>
           <Table variant="simple">
             <Thead>

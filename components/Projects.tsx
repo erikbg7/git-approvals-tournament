@@ -2,16 +2,8 @@ import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
-import { Box, Button, Heading, VStack } from '@chakra-ui/react';
+import { Button, Heading, VStack } from '@chakra-ui/react';
 import type { GitlabProject } from '../models/gitlab';
-
-type AvatarProps = {
-  color?: string;
-  iconFallback?: React.ReactNode;
-  iconName: string;
-  iconSize?: number;
-  onClick: Function;
-};
 
 const Projects = ({ projects }: { projects: GitlabProject[] }) => {
   const { pathname, query } = useRouter();
@@ -34,6 +26,7 @@ const Projects = ({ projects }: { projects: GitlabProject[] }) => {
       <br />
       {projects.map((project) => (
         <Button
+          key={project.id}
           disabled={projectsIds.includes(project.id.toString())}
           onClick={() => setProjectsIds((ids) => [...ids, project.id.toString()])}
           p={5}

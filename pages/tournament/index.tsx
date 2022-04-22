@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { GetServerSideProps } from 'next';
 import Router, { useRouter } from 'next/router';
 import { getToken } from 'next-auth/jwt';
-import { Alert, AlertDescription, AlertIcon, AlertTitle, VStack, useToast } from '@chakra-ui/react';
+import { VStack } from '@chakra-ui/react';
 
 import type { GitlabGroup, GitlabProject, GitlabUser } from '../../models/gitlab';
-import type { QueryParams, UserWithApprovals } from '../../models/tournament';
+import type { QueryParams } from '../../models/tournament';
 import { Organizations } from '../../components/Organizations';
 import { Projects } from '../../components/Projects';
 import { Members } from '../../components/Members';
@@ -43,7 +43,6 @@ const Index: React.FC<Props> = ({ organizations = [], projects = [], members = [
   }, [hasResults]);
 
   const handleTournamentStart = (members: GitlabUser[]) => setTournamentMembers(members);
-  const handleCleanUp = useCallback(() => setTournamentMembers([]), []);
 
   const showSteps = !tournamentMembers || (tournamentMembers && !hasResults);
 
@@ -51,7 +50,7 @@ const Index: React.FC<Props> = ({ organizations = [], projects = [], members = [
     <VStack height={'80vh'} display={'flex'} alignItems={'center'} justifyContent={'start'} p={6}>
       {showSteps && <Steps resolve={!!tournamentMembers.length} />}
       {paramProjects && hasResults && (
-        <Results users={tournamentMembers} onCleanUp={handleCleanUp} projects={paramProjects} />
+        <Results users={tournamentMembers} projects={paramProjects} />
       )}
       {!hasResults && !hasOrganization && <Organizations organizations={organizations} />}
       {!hasResults && hasOrganization && !hasProjects && <Projects projects={projects} />}
@@ -71,15 +70,12 @@ const getServerSideProps: GetServerSideProps = async (context) => {
     const isSessionActive = token && accessToken;
     const hasError = !!params.error;
 
-    console.warn('isSessionActive', isSessionActive);
-
     if (hasError) {
       return { props: {} };
     }
 
     if (isSessionActive && !params.organization) {
       const organizations = (await getOrganizations(accessToken)) || [];
-      console.warn('organizations', organizations);
       return { props: { organizations } };
     }
 

@@ -14,8 +14,6 @@ const fetcher = (token: string, pathUrl: string) =>
 
 export const getOrganizations = async (token: string): Promise<GitlabGroup[]> => {
   const groups = await fetcher(token, '/groups');
-  console.warn('sadknmsjkn');
-  console.warn({ groups });
   if (groups?.error) {
     throw new Error(groups.error);
   }
@@ -53,6 +51,24 @@ export const getProjectEvents = async (
   token: string,
   projectId: string
 ): Promise<GitlabApprovalEvent[]> => {
-  const events = await fetcher(token, `/projects/${projectId}/events?action=approved`);
+  const date = get15DaysBefore();
+  const events = await fetcher(
+    token,
+    `/projects/${projectId}/events?action=approved&after=${date}&per_page=100`
+  );
+
   return events;
+};
+
+const getYYYYMMDD = (date: Date) => {
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  return `${year}-${month}-${day}`;
+};
+
+const get15DaysBefore = () => {
+  const newDate = new Date();
+  newDate.setDate(newDate.getDate() - 15);
+  return getYYYYMMDD(newDate);
 };
