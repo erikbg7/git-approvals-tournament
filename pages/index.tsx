@@ -39,6 +39,13 @@ const Home: NextPage = () => {
         >
           Sign in with Gitlab
         </Button>
+        <Button
+          variant={'outline'}
+          borderColor={'gray.400'}
+          onClick={() => signIn('github', { callbackUrl: '/tournament/github' })}
+        >
+          Sign in with Github
+        </Button>
       </VStack>
     </VStack>
   );
