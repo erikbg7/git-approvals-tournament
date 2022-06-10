@@ -4,10 +4,10 @@ import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 import { Button, Heading, VStack } from '@chakra-ui/react';
 import type { GitlabGroup } from '../../models/gitlab';
-// import { OrganizationCard } from './OrganizationCard';
 
 const Organizations = ({ organizations }: { organizations: GitlabGroup[] }) => {
-  const { pathname } = useRouter();
+  const { pathname, query } = useRouter();
+  const { provider } = query;
 
   return (
     <VStack
@@ -25,7 +25,10 @@ const Organizations = ({ organizations }: { organizations: GitlabGroup[] }) => {
       </Heading>
       <br />
       {organizations.map((organization) => (
-        <Link key={organization.id} href={{ pathname, query: { organization: organization.id } }}>
+        <Link
+          key={organization.id}
+          href={{ pathname, query: { provider, organization: organization.id } }}
+        >
           <Button p={10} color={'#fc6d26'} fontSize={'xl'} fontWeight={'bold'}>
             {organization.name}
           </Button>

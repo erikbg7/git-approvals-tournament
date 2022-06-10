@@ -1,6 +1,6 @@
 import React from 'react';
 import type { NextPage } from 'next';
-import { Button, Text, Flex, Heading, VStack, HStack } from '@chakra-ui/react';
+import { Button, Text, Heading, VStack, HStack } from '@chakra-ui/react';
 import { signIn } from 'next-auth/react';
 
 const Home: NextPage = () => {
@@ -35,7 +35,7 @@ const Home: NextPage = () => {
         <Button
           variant={'outline'}
           borderColor={'#fc6d26'}
-          onClick={() => signIn('gitlab', { callbackUrl: '/tournament' })}
+          onClick={() => signIn('gitlab', { callbackUrl: '/tournament/gitlab' })}
         >
           Sign in with Gitlab
         </Button>

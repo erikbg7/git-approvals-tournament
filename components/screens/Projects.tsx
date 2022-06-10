@@ -7,6 +7,8 @@ import type { GitlabProject } from '../../models/gitlab';
 
 const Projects = ({ projects }: { projects: GitlabProject[] }) => {
   const { pathname, query } = useRouter();
+  const { provider } = query;
+
   const [projectsIds, setProjectsIds] = React.useState<string[]>([]);
 
   return (
@@ -43,7 +45,7 @@ const Projects = ({ projects }: { projects: GitlabProject[] }) => {
         <Link
           href={{
             pathname,
-            query: { organization: query.organization, projects: projectsIds.join(',') },
+            query: { provider, organization: query.organization, projects: projectsIds.join(',') },
           }}
         >
           <Button

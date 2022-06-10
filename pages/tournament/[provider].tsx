@@ -6,10 +6,7 @@ import { VStack } from '@chakra-ui/react';
 
 import type { GitlabGroup, GitlabProject, GitlabUser } from '../../models/gitlab';
 import type { QueryParams } from '../../models/tournament';
-import { Organizations } from '../../components/Organizations';
-import { Projects } from '../../components/Projects';
-import { Members } from '../../components/Members';
-import { Results } from '../../components/Results';
+import { Members, Organizations, Projects, Results } from '../../components/screens';
 import { Steps } from '../../components/Stepper';
 import { getAllProjectsMembers, getOrganizations, getProjects } from '../../services/gitlab-api';
 import { ErrorAlert } from '../../components/ErrorAlert';
@@ -20,7 +17,7 @@ type Props = {
   members: GitlabUser[];
 };
 
-const Index: React.FC<Props> = ({ organizations = [], projects = [], members = [] }) => {
+const Provider: React.FC<Props> = ({ organizations = [], projects = [], members = [] }) => {
   const router = useRouter();
   const query = router.query as QueryParams;
   const [tournamentMembers, setTournamentMembers] = useState<GitlabUser[]>([]);
@@ -63,6 +60,8 @@ const Index: React.FC<Props> = ({ organizations = [], projects = [], members = [
 };
 
 const getServerSideProps: GetServerSideProps = async (context) => {
+  const provider = context?.params?.provider as string;
+
   try {
     const token = await getToken(context);
     const accessToken = token?.accessToken as string;
@@ -103,4 +102,4 @@ const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 export { getServerSideProps };
-export default Index;
+export default Provider;

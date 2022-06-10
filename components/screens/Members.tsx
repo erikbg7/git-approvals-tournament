@@ -12,6 +12,8 @@ type Props = {
 
 const Members = ({ members, onTournamentStart }: Props) => {
   const { pathname, query } = useRouter();
+  const { provider } = query;
+
   const [selectedMembers, setSelectedMembers] = React.useState<GitlabUser[]>([]);
 
   const handleSelectedMember = (member: GitlabUser) => () => {
@@ -52,7 +54,12 @@ const Members = ({ members, onTournamentStart }: Props) => {
         <Link
           href={{
             pathname,
-            query: { organization: query.organization, projects: query.projects, results: true },
+            query: {
+              provider,
+              organization: query.organization,
+              projects: query.projects,
+              results: true,
+            },
           }}
         >
           <Button
