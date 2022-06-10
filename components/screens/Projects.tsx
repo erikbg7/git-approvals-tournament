@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 import { Button, Heading, VStack } from '@chakra-ui/react';
-import type { GitlabProject } from '../models/gitlab';
+import type { GitlabProject } from '../../models/gitlab';
 
 const Projects = ({ projects }: { projects: GitlabProject[] }) => {
   const { pathname, query } = useRouter();

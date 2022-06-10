@@ -14,11 +14,11 @@ import {
   Tbody,
   Spinner,
 } from '@chakra-ui/react';
-import type { UserWithApprovals } from '../models/tournament';
-import type { GitlabUser } from '../models/gitlab';
-import { getApprovalsByUser } from '../services/tournament-api';
-import { buildErrorToast, sortByApprovalsAmount } from '../utils';
-import { ErrorAlert } from './ErrorAlert';
+import type { UserWithApprovals } from '../../models/tournament';
+import type { GitlabUser } from '../../models/gitlab';
+import { getApprovalsByUser } from '../../services/tournament-api';
+import { buildErrorToast, sortByApprovalsAmount } from '../../utils';
+import { ErrorAlert } from '../ErrorAlert';
 
 type Props = {
   users: GitlabUser[];

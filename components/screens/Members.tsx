@@ -2,8 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { Button, Text, Heading, VStack, Box } from '@chakra-ui/react';
-import type { GitlabUser } from '../models/gitlab';
+import { Button, Heading, VStack, Box } from '@chakra-ui/react';
+import type { GitlabUser } from '../../models/gitlab';
 
 type Props = {
   members: GitlabUser[];

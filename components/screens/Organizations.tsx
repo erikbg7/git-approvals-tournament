@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 import { Button, Heading, VStack } from '@chakra-ui/react';
-import type { GitlabGroup } from '../models/gitlab';
-import { OrganizationCard } from './OrganizationCard';
+import type { GitlabGroup } from '../../models/gitlab';
+// import { OrganizationCard } from './OrganizationCard';
 
 const Organizations = ({ organizations }: { organizations: GitlabGroup[] }) => {
   const { pathname } = useRouter();
