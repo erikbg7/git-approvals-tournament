@@ -1,6 +1,8 @@
+import { config } from '../config';
 import type { GitlabGroup, GitlabUser, GitlabProject, GitlabApprovalEvent } from '../models/gitlab';
+import type { TournamentOrganization, TournamentProject } from '../models/tournament';
 
-const getOptions = (token: string) => ({
+const buildHeaders = (token: string) => ({
   method: 'GET',
   headers: {
     'Content-Type': 'application/json',
@@ -8,26 +10,34 @@ const getOptions = (token: string) => ({
   },
 });
 
-const BASE_URL = 'https://gitlab.com/api/v4';
-const fetcher = (token: string, pathUrl: string) =>
-  fetch(BASE_URL.concat(pathUrl), getOptions(token)).then((res) => res.json());
-
-export const getOrganizations = async (token: string): Promise<GitlabGroup[]> => {
-  const groups = await fetcher(token, '/groups');
-  if (groups?.error) {
-    throw new Error(groups.error);
-  }
-  return groups.map((group: GitlabGroup) => ({ id: group.id, name: group.name }));
+const request = async (token: string, pathUrl: string) => {
+  const url = `${config.gitlab.baseUrl}${pathUrl}`;
+  const result = await fetch(url, buildHeaders(token));
+  return result.json();
 };
 
-export async function getProjects(token: string, groupId: string): Promise<GitlabProject[]> {
-  const projects = await fetcher(token, `/groups/${groupId}/projects`);
-  return projects.map((project: GitlabProject) => ({ id: project.id, name: project.name }));
-}
+const getOrganizations = async (token: string): Promise<TournamentOrganization[]> => {
+  const organizations = await request(token, '/groups');
+  if (organizations?.error) {
+    throw new Error(organizations.error);
+  }
+  return organizations.map((org: GitlabGroup) => ({
+    id: org.id,
+    name: org.name,
+  }));
+};
 
-export const getAllProjectsMembers = async (token: string, projectIds: string[]) => {
-  const membersRequests = projectIds.map(async (id: string) => {
-    return fetcher(token, `/projects/${id}/members`);
+const getProjects = async (token: string, groupId: string): Promise<TournamentProject[]> => {
+  const projects = await request(token, `/groups/${groupId}/projects`);
+  return projects.map((project: GitlabProject) => ({
+    id: project.id,
+    name: project.name,
+  }));
+};
+
+const getAllProjectsMembers = async (token: string, projectIds: string[]) => {
+  const membersRequests = projectIds.map((id: string) => {
+    return request(token, `/projects/${id}/members`);
   });
 
   let tournamentContestants: Record<string, GitlabUser> = {};
@@ -44,7 +54,8 @@ export const getAllProjectsMembers = async (token: string, projectIds: string[])
     tournamentContestants[member.id] = member;
   });
 
-  return Object.values(tournamentContestants);
+  const allMembers = Object.values(tournamentContestants);
+  return Array.from(allMembers);
 };
 
 export const getProjectEvents = async (
@@ -52,7 +63,7 @@ export const getProjectEvents = async (
   projectId: string
 ): Promise<GitlabApprovalEvent[]> => {
   const date = get15DaysBefore();
-  const events = await fetcher(
+  const events = await request(
     token,
     `/projects/${projectId}/events?action=approved&after=${date}&per_page=100`
   );
@@ -72,3 +83,5 @@ const get15DaysBefore = () => {
   newDate.setDate(newDate.getDate() - 15);
   return getYYYYMMDD(newDate);
 };
+
+export { getOrganizations, getProjects, getAllProjectsMembers };
