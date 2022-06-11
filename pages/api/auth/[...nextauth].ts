@@ -2,19 +2,19 @@ import NextAuth from 'next-auth';
 import GitlabProvider from 'next-auth/providers/gitlab';
 import GithubProvider from 'next-auth/providers/github';
 
+import { config } from '../../../config';
+
 export default NextAuth({
   providers: [
-    // TODO: scope=read:org should be enough
     GithubProvider({
-      clientId: process.env.GITHUB_CLIENT_ID,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      authorization: `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&scope=repo,user`,
+      clientId: config.github.clientId,
+      clientSecret: config.github.clientSecret,
+      authorization: config.github.oAuthUrl,
     }),
     GitlabProvider({
-      clientId: process.env.GITLAB_CLIENT_ID,
-      clientSecret: process.env.GITLAB_CLIENT_SECRET,
-      authorization:
-        'https://gitlab.com/oauth/authorize?scope=read_user%20read_repository%20api%20read_api',
+      clientId: config.gitlab.clientId,
+      clientSecret: config.gitlab.clientSecret,
+      authorization: config.gitlab.oAuthUrl,
     }),
   ],
   callbacks: {
