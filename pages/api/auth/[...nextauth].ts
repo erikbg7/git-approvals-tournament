@@ -19,20 +19,12 @@ export default NextAuth({
   ],
   callbacks: {
     async session({ session, token, user }) {
-      const newSession = { ...session };
-
-      if (token.accessToken) {
-        newSession.accessToken = token.accessToken;
-      }
-
-      return newSession;
+      const accessToken = token.accessToken || session.accessToken;
+      return { ...session, accessToken };
     },
     async jwt({ token, user, account, profile, isNewUser }) {
-      if (account && account.access_token) {
-        token.accessToken = account.access_token;
-      }
-
-      return token;
+      const accessToken = account?.access_token || token.accessToken;
+      return { ...token, accessToken };
     },
   },
 });
