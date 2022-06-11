@@ -8,8 +8,8 @@ import type { GitlabGroup, GitlabProject, GitlabUser } from '../../models/gitlab
 import type { QueryParams } from '../../models/tournament';
 import { Members, Organizations, Projects, Results } from '../../components/screens';
 import { Steps } from '../../components/Stepper';
-import { getAllProjectsMembers, getOrganizations, getProjects } from '../../services/gitlab-api';
 import { ErrorAlert } from '../../components/ErrorAlert';
+import { createTournament } from '../../services/tournament-api';
 
 type Props = {
   organizations: GitlabGroup[];
@@ -60,33 +60,47 @@ const Provider: React.FC<Props> = ({ organizations = [], projects = [], members 
 };
 
 const getServerSideProps: GetServerSideProps = async (context) => {
-  const provider = context?.params?.provider as string;
-
   try {
     const token = await getToken(context);
-    const accessToken = token?.accessToken as string;
     const params = context.query as QueryParams;
-    const isSessionActive = token && accessToken;
-    const hasError = !!params.error;
+    const provider = context?.params?.provider as 'github' | 'gitlab';
+
+    const hasError = !!params?.error;
+    const tournament = createTournament({ provider, token });
 
     if (hasError) {
       return { props: {} };
     }
 
-    if (isSessionActive && !params.organization) {
-      const organizations = (await getOrganizations(accessToken)) || [];
-      return { props: { organizations } };
+    if (!tournament.isSessionActive) {
+      return {
+        redirect: { permanent: false, destination: '/' },
+        props: {},
+      };
     }
 
-    if (isSessionActive && params.organization && !params.projects) {
-      const projects = await getProjects(accessToken, params.organization);
-      return { props: { projects } };
+    if (!params.organization) {
+      const organizations = (await tournament.getOrganizations()) || [];
+
+      return {
+        props: { organizations },
+      };
     }
 
-    if (isSessionActive && params.organization && params.projects) {
+    if (params.organization && !params.projects) {
+      const projects = await tournament.getProjects(params.organization);
+
+      return {
+        props: { projects },
+      };
+    }
+
+    if (params.organization && params.projects) {
       const projectIdsList = params.projects.split(',');
-      const members = await getAllProjectsMembers(accessToken, projectIdsList);
-      return { props: { members: Array.from(members) } };
+      const members = await tournament.getMembers(projectIdsList);
+      return {
+        props: { members },
+      };
     }
 
     return {
