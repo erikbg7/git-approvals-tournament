@@ -14,6 +14,7 @@ import { Members, Organizations, Projects, Results } from '../../components/scre
 import { Steps } from '../../components/Stepper';
 import { ErrorAlert } from '../../components/ErrorAlert';
 import { createTournament } from '../../services/tournament-api';
+import { OrganizationWarning } from '../../components/OrganizationWarning';
 
 type Props = {
   organizations: TournamentOrganization[];
@@ -28,6 +29,7 @@ const Provider: React.FC<Props> = ({ organizations = [], projects = [], members 
 
   useEffect(() => setTournamentMembers([]), []);
 
+  const provider = query?.provider;
   const hasOrganization = !!query.organization;
   const hasProjects = !!query.projects;
   const hasError = !!query.error;
@@ -59,6 +61,7 @@ const Provider: React.FC<Props> = ({ organizations = [], projects = [], members 
         <Members members={members} onTournamentStart={handleTournamentStart} />
       )}
       {hasError && <ErrorAlert />}
+      {provider === 'github' && <OrganizationWarning />}
     </VStack>
   );
 };

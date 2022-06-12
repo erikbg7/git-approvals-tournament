@@ -35,6 +35,7 @@ const Organizations = ({ organizations }: { organizations: TournamentOrganizatio
           </Button>
         </Link>
       ))}
+      <br />
     </VStack>
   );
 };
