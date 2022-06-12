@@ -1,26 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import type { GetServerSideProps } from 'next';
 import Router, { useRouter } from 'next/router';
 import { getToken } from 'next-auth/jwt';
 import { VStack } from '@chakra-ui/react';
 
-import type { GitlabGroup, GitlabProject, GitlabUser } from '../../models/gitlab';
-import type { QueryParams } from '../../models/tournament';
+import type {
+  QueryParams,
+  TournamentOrganization,
+  TournamentProject,
+  TournamentUser,
+} from '../../models/tournament';
 import { Members, Organizations, Projects, Results } from '../../components/screens';
 import { Steps } from '../../components/Stepper';
 import { ErrorAlert } from '../../components/ErrorAlert';
 import { createTournament } from '../../services/tournament-api';
 
 type Props = {
-  organizations: GitlabGroup[];
-  projects: GitlabProject[];
-  members: GitlabUser[];
+  organizations: TournamentOrganization[];
+  projects: TournamentProject[];
+  members: TournamentUser[];
 };
 
 const Provider: React.FC<Props> = ({ organizations = [], projects = [], members = [] }) => {
   const router = useRouter();
   const query = router.query as QueryParams;
-  const [tournamentMembers, setTournamentMembers] = useState<GitlabUser[]>([]);
+  const [tournamentMembers, setTournamentMembers] = useState<TournamentUser[]>([]);
 
   useEffect(() => setTournamentMembers([]), []);
 
@@ -39,7 +43,7 @@ const Provider: React.FC<Props> = ({ organizations = [], projects = [], members 
     };
   }, [hasResults]);
 
-  const handleTournamentStart = (members: GitlabUser[]) => setTournamentMembers(members);
+  const handleTournamentStart = (members: TournamentUser[]) => setTournamentMembers(members);
 
   const showSteps = !tournamentMembers || (tournamentMembers && !hasResults);
 

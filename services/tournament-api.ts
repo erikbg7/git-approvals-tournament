@@ -1,4 +1,3 @@
-import type { GitlabUser } from '../models/gitlab';
 import type {
   TournamentOrganization,
   TournamentProject,
@@ -41,7 +40,7 @@ const createTournament = (config: TournamentClientConfig): TournamentClient => {
 };
 
 const getApprovalsByUser = (
-  members: GitlabUser[],
+  members: TournamentUser[],
   projects: string[]
 ): Promise<UserWithApprovals[]> => {
   return fetch('/api/counter', {

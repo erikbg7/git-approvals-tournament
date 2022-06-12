@@ -1,17 +1,17 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
-import type { GitlabUser } from '../../models/gitlab';
+import type { TournamentUser } from '../../models/tournament';
 import { getProjectEvents } from '../../services/gitlab-api';
 import { getToken } from 'next-auth/jwt';
 
-type UserWithApprovals = GitlabUser & { approvals: number };
+type UserWithApprovals = TournamentUser & { approvals: number };
 type ApprovalsByUser = { approvalsByUser: UserWithApprovals[] };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<ApprovalsByUser>) => {
   const token = await getToken({ req });
   const isValidSession = token && token.accessToken;
 
-  const contestants: GitlabUser[] = req.body?.members || [];
+  const contestants: TournamentUser[] = req.body?.members || [];
   const projectIds: string[] = req.body?.projects || [];
 
   let usersWithApprovals: Record<string, UserWithApprovals> = {};

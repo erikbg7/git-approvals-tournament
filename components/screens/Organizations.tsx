@@ -3,11 +3,12 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 import { Button, Heading, VStack } from '@chakra-ui/react';
-import type { GitlabGroup } from '../../models/gitlab';
+import type { TournamentOrganization } from '../../models/tournament';
+import { QueryParams } from '../../models/tournament';
 
-const Organizations = ({ organizations }: { organizations: GitlabGroup[] }) => {
+const Organizations = ({ organizations }: { organizations: TournamentOrganization[] }) => {
   const { pathname, query } = useRouter();
-  const { provider } = query;
+  const { provider } = query as QueryParams;
 
   return (
     <VStack

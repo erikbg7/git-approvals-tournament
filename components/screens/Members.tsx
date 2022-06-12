@@ -3,20 +3,20 @@ import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { Button, Heading, VStack, Box } from '@chakra-ui/react';
-import type { GitlabUser } from '../../models/gitlab';
+import type { TournamentUser } from '../../models/tournament';
 
 type Props = {
-  members: GitlabUser[];
-  onTournamentStart(members: GitlabUser[]): void;
+  members: TournamentUser[];
+  onTournamentStart(members: TournamentUser[]): void;
 };
 
 const Members = ({ members, onTournamentStart }: Props) => {
   const { pathname, query } = useRouter();
   const { provider } = query;
 
-  const [selectedMembers, setSelectedMembers] = React.useState<GitlabUser[]>([]);
+  const [selectedMembers, setSelectedMembers] = React.useState<TournamentUser[]>([]);
 
-  const handleSelectedMember = (member: GitlabUser) => () => {
+  const handleSelectedMember = (member: TournamentUser) => () => {
     setSelectedMembers((prev) => [...prev, member]);
   };
 
@@ -70,7 +70,6 @@ const Members = ({ members, onTournamentStart }: Props) => {
             transition={{ duration: 0.1 }}
             // transition={{ duration: 0.5 }}
             padding={4}
-            width={'50%'}
             onClick={() => onTournamentStart(selectedMembers)}
             color={'#fc6d26'}
             borderColor={'#fc6d26'}

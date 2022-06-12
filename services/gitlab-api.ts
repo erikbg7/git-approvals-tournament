@@ -1,6 +1,10 @@
 import { config } from '../config';
-import type { GitlabGroup, GitlabUser, GitlabProject, GitlabApprovalEvent } from '../models/gitlab';
-import type { TournamentOrganization, TournamentProject } from '../models/tournament';
+import type {
+  TournamentOrganization,
+  TournamentProject,
+  TournamentUser,
+  TournamentApprovalEvent,
+} from '../models/tournament';
 
 const buildHeaders = (token: string) => ({
   method: 'GET',
@@ -21,7 +25,7 @@ const getOrganizations = async (token: string): Promise<TournamentOrganization[]
   if (organizations?.error) {
     throw new Error(organizations.error);
   }
-  return organizations.map((org: GitlabGroup) => ({
+  return organizations.map((org: TournamentOrganization) => ({
     id: org.id,
     name: org.name,
   }));
@@ -29,7 +33,7 @@ const getOrganizations = async (token: string): Promise<TournamentOrganization[]
 
 const getProjects = async (token: string, groupId: string): Promise<TournamentProject[]> => {
   const projects = await request(token, `/groups/${groupId}/projects`);
-  return projects.map((project: GitlabProject) => ({
+  return projects.map((project: TournamentProject) => ({
     id: project.id,
     name: project.name,
   }));
@@ -40,7 +44,7 @@ const getAllProjectsMembers = async (token: string, projectIds: string[]) => {
     return request(token, `/projects/${id}/members`);
   });
 
-  let tournamentContestants: Record<string, GitlabUser> = {};
+  let tournamentContestants: Record<string, TournamentUser> = {};
   const members = await Promise.all(membersRequests);
 
   const allProjectsMembers = members.flat(2);
@@ -50,7 +54,7 @@ const getAllProjectsMembers = async (token: string, projectIds: string[]) => {
     throw new Error('token expired');
   }
 
-  allProjectsMembers.forEach((member: GitlabUser) => {
+  allProjectsMembers.forEach((member: TournamentUser) => {
     tournamentContestants[member.id] = member;
   });
 
@@ -61,7 +65,7 @@ const getAllProjectsMembers = async (token: string, projectIds: string[]) => {
 export const getProjectEvents = async (
   token: string,
   projectId: string
-): Promise<GitlabApprovalEvent[]> => {
+): Promise<TournamentApprovalEvent[]> => {
   const date = get15DaysBefore();
   const events = await request(
     token,

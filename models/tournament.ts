@@ -1,5 +1,3 @@
-import { GitlabUser } from './gitlab';
-
 export type TournamentOrganization = {
   id: number;
   name: string;
@@ -16,6 +14,7 @@ export type TournamentUser = {
 };
 
 export type QueryParams = {
+  provider: 'github' | 'gitlab';
   organization?: string;
   projects?: string;
   error?: string;
@@ -24,4 +23,8 @@ export type QueryParams = {
 
 export type UserWithApprovals = {
   approvals: number;
-} & GitlabUser;
+} & TournamentUser;
+
+export type TournamentApprovalEvent = {
+  author: TournamentUser;
+};

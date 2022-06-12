@@ -3,13 +3,14 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 import { Button, Heading, VStack } from '@chakra-ui/react';
-import type { GitlabProject } from '../../models/gitlab';
+import { QueryParams, TournamentProject } from '../../models/tournament';
 
-const Projects = ({ projects }: { projects: GitlabProject[] }) => {
+
+const Projects = ({ projects }: { projects: TournamentProject[] }) => {
   const { pathname, query } = useRouter();
   const { provider } = query;
 
-  const [projectsIds, setProjectsIds] = React.useState<string[]>([]);
+  const [chosenProjects, setChosenProjects] = React.useState<TournamentProject[]>([]);
 
   return (
     <VStack
