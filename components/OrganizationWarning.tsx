@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Heading, Text, Link } from '@chakra-ui/react';
-import { BiLinkExternal } from 'react-icons/bi';
+import { ExternalLinkIcon } from '@chakra-ui/icons';
 import { motion } from 'framer-motion';
 
 import { config } from '../config';
@@ -38,7 +38,7 @@ const OrganizationWarning = () => {
               justifyContent={'center'}
               href={config.github.requestAccessUrl}
             >
-              Don't forget to request it. <Box as={BiLinkExternal} color={'white'} ml={2} />
+              Don't forget to request it. <Box as={ExternalLinkIcon} color={'white'} ml={2} />
             </Link>
           </Text>
         </Box>

@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { Button, Heading, VStack } from '@chakra-ui/react';
 import type { TournamentOrganization } from '../../models/tournament';
 import { QueryParams } from '../../models/tournament';
+import { OrganizationWarning } from '../OrganizationWarning';
 
 const Organizations = ({ organizations }: { organizations: TournamentOrganization[] }) => {
   const { pathname, query } = useRouter();
@@ -36,6 +37,7 @@ const Organizations = ({ organizations }: { organizations: TournamentOrganizatio
         </Link>
       ))}
       <br />
+      {provider === 'github' && <OrganizationWarning />}
     </VStack>
   );
 };

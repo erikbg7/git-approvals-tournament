@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { CheckIcon } from '@chakra-ui/icons';
-import { Circle, Divider, HStack, Text, useToast, VStack } from '@chakra-ui/react';
+import { Circle, Divider, HStack, Text, VStack } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 
 type StepDividerProps = {
