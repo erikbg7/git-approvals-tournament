@@ -1,30 +1,48 @@
-export type TournamentOrganization = {
+const PROVIDERS = {
+  GITHUB: 'github',
+  GITLAB: 'gitlab',
+} as const;
+
+type TournamentProvider = typeof PROVIDERS[keyof typeof PROVIDERS];
+
+type TournamentOrganization = {
   id: number;
   name: string;
 };
 
-export type TournamentProject = {
+type TournamentProject = {
   id: number;
   name: string;
 };
 
-export type TournamentUser = {
+type TournamentUser = {
   id: number;
   name: string;
 };
 
-export type QueryParams = {
-  provider: 'github' | 'gitlab';
+type QueryParams = {
+  provider: TournamentProvider;
   organization?: string;
   projects?: string;
   error?: string;
   results?: string;
 };
 
-export type UserWithApprovals = {
+type UserWithApprovals = {
   approvals: number;
 } & TournamentUser;
 
-export type TournamentApprovalEvent = {
+type TournamentApprovalEvent = {
   author: TournamentUser;
+};
+
+export { PROVIDERS };
+export type {
+  QueryParams,
+  TournamentApprovalEvent,
+  TournamentOrganization,
+  TournamentProject,
+  TournamentProvider,
+  TournamentUser,
+  UserWithApprovals,
 };

@@ -1,15 +1,18 @@
+import * as gitlabApi from './gitlab-api';
+import * as githubApi from './github-api';
+import { PROVIDERS } from '../models/tournament';
+
+import type { JWT } from 'next-auth/jwt';
 import type {
   TournamentOrganization,
   TournamentProject,
+  TournamentProvider,
   TournamentUser,
   UserWithApprovals,
 } from '../models/tournament';
-import type { JWT } from 'next-auth/jwt';
-import * as gitlabApi from './gitlab-api';
-import * as githubApi from './github-api';
 
 type TournamentClientConfig = {
-  provider: 'gitlab' | 'github';
+  provider: TournamentProvider;
   token: JWT | null;
 };
 
@@ -21,8 +24,8 @@ type TournamentClient = {
 };
 
 const PROVIDER_API = {
-  ['gitlab']: gitlabApi,
-  ['github']: githubApi,
+  [PROVIDERS.GITLAB]: gitlabApi,
+  [PROVIDERS.GITHUB]: githubApi,
 };
 
 const createTournament = (config: TournamentClientConfig): TournamentClient => {

@@ -8,6 +8,7 @@ import type {
   QueryParams,
   TournamentOrganization,
   TournamentProject,
+  TournamentProvider,
   TournamentUser,
 } from '../../models/tournament';
 import { Members, Organizations, Projects, Results } from '../../components/screens';
@@ -68,7 +69,7 @@ const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const token = await getToken(context);
     const params = context.query as QueryParams;
-    const provider = context?.params?.provider as 'github' | 'gitlab';
+    const provider = context?.params?.provider as TournamentProvider;
 
     const hasError = !!params?.error;
     const tournament = createTournament({ provider, token });
