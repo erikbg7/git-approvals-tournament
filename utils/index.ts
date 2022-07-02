@@ -5,6 +5,19 @@ const sortByApprovalsAmount = (users: UserWithApprovals[]): UserWithApprovals[] 
   return users.sort((a, b) => b.approvals - a.approvals);
 };
 
+const getYYYYMMDD = (date: Date) => {
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  return `${year}-${month}-${day}`;
+};
+
+const get15DaysBefore = () => {
+  const newDate = new Date();
+  newDate.setDate(newDate.getDate() - 45);
+  return getYYYYMMDD(newDate);
+};
+
 const buildErrorToast = (message?: string): UseToastOptions => {
   return {
     id: 'error-toast',
@@ -16,4 +29,4 @@ const buildErrorToast = (message?: string): UseToastOptions => {
   };
 };
 
-export { sortByApprovalsAmount, buildErrorToast };
+export { sortByApprovalsAmount, buildErrorToast, get15DaysBefore };
