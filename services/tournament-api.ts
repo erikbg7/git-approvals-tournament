@@ -38,7 +38,7 @@ const createTournament = (config: TournamentClientConfig): TournamentClient => {
     isSessionActive: !!accessToken,
     getOrganizations: () => api.getOrganizations(accessToken),
     getProjects: (organizationId) => api.getProjects(accessToken, organizationId),
-    getMembers: (projectsIds) => api.getAllProjectsMembers(accessToken, projectsIds),
+    getMembers: (projectsIds) => api.getMembers(accessToken, projectsIds),
   };
 };
 

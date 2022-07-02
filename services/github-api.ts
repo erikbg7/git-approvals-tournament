@@ -132,4 +132,4 @@ const getPullRequestApprovers = async (token: string, pullUrl: string) => {
   return Object.values(approvers);
 };
 
-export { getOrganizations, getProjects, getAllProjectsMembers };
+export { getOrganizations, getProjects, getMembers };

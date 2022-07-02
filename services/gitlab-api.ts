@@ -5,6 +5,7 @@ import type {
   TournamentUser,
   TournamentApprovalEvent,
 } from '../models/tournament';
+import { get15DaysBefore } from '../utils';
 
 const buildHeaders = (token: string) => ({
   method: 'GET',
