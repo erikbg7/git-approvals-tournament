@@ -1,4 +1,8 @@
-const getOptions = (token: string) => ({
+import { config } from '../config';
+import { TournamentApprovalEvent, TournamentProject, TournamentUser } from '../models/tournament';
+import { get15DaysBefore } from '../utils';
+
+const buildHeaders = (token: string) => ({
   method: 'GET',
   headers: {
     'Content-Type': 'application/json',
@@ -14,19 +18,8 @@ const request = async (token: string, pathUrl: string) => {
 };
 
 const getOrganizations = async (token: string): Promise<any> => {
-  // const url = 'https://api.github.com/search/repositories?q=user:erikbg7';
-  // const url = 'https://api.github.com/users/erikbg7/repos';
-  const url = 'https://api.github.com/user/orgs';
-  // const url = 'https://api.github.com/users/erikblanca/events';
-  const orgs = await fetch(url, getOptions(token)).then((res) => res.json());
-  const first = orgs[0];
-
-  const url2 = 'https://api.github.com/orgs/'.concat(first.login, '/repos');
-  const repos = await fetch(url2, getOptions(token)).then((res) => res.json());
-  // const o = orgs.map((a: any) => a?.repo?.name);
-  console.log('List');
-  console.log({ orgs, repos });
-  return orgs.map((o = {} as any) => {
+  const organizations = await request(token, '/user/orgs');
+  return organizations.map((o = {} as any) => {
     if (o.id && o.login) {
       return { id: o.id, name: o.login };
     }
@@ -94,8 +87,49 @@ export const getProjectEvents = async (token: string): Promise<TournamentApprova
   return [];
 };
 
-const getAllProjectsMembers = async (token: string, projectIds: string[]) => {
-  return [];
+// /repos/{owner}/{repo}/events
+
+// 'https://api.github.com/users/erikbg7/events{/privacy}',
+//
+// const url = 'https://api.github.com/search/repositories?q=user:erikbg7';
+// const url = 'https://api.github.com/users/erikbg7/repos';
+// const url = 'https://api.github.com/users/erikblanca/events';
+
+// const url2 = 'https://api.github.com/orgs/'.concat(first.login, '/repos');
+// const repos = await fetch(url2, getOptions(token)).then((res) => res.json());
+
+type GithubUser = {
+  id: number;
+  login: string;
+};
+
+type GithubPullRequest = {
+  number: number;
+  url: string;
+  state: 'open' | 'closed';
+};
+
+type GithubPrEvent = {
+  state: 'APPROVED' | 'COMMENTED';
+  user: GithubUser;
+  submitted_at: string;
+};
+
+const getPullRequestApprovers = async (token: string, pullUrl: string) => {
+  const events: GithubPrEvent[] = await request(token, `${pullUrl}/reviews`);
+  const tournamentStart = new Date(get15DaysBefore()).getTime();
+  const approvers: Record<string, string> = {};
+
+  events.map((e) => {
+    if (e.state === 'APPROVED' && e.user && e.user.login) {
+      const eventSubmission = new Date(e.submitted_at).getTime();
+      if (eventSubmission >= tournamentStart) {
+        approvers[e.user.login] = e.user.login;
+      }
+    }
+  });
+
+  return Object.values(approvers);
 };
 
 export { getOrganizations, getProjects, getAllProjectsMembers };
