@@ -7,6 +7,12 @@ const getOptions = (token: string) => ({
   },
 });
 
+const request = async (token: string, pathUrl: string) => {
+  const url = pathUrl.startsWith('http') ? pathUrl : `${config.github.baseUrl}${pathUrl}`;
+  const result = await fetch(url, buildHeaders(token));
+  return result.json();
+};
+
 const getOrganizations = async (token: string): Promise<any> => {
   // const url = 'https://api.github.com/search/repositories?q=user:erikbg7';
   // const url = 'https://api.github.com/users/erikbg7/repos';
@@ -28,7 +34,63 @@ const getOrganizations = async (token: string): Promise<any> => {
 };
 
 const getProjects = async (token: string, groupId: string): Promise<any> => {
-  // /orgs/{org}/repos
+  const projects = await request(token, `/orgs/${groupId}/repos`);
+  return projects.map((project: TournamentProject) => ({
+    id: project.id,
+    name: project.name,
+  }));
+};
+
+const getMembers = async (token: string, projectIds: string[]) => {
+  const requests = projectIds.map((id: string) => {
+    return request(token, `/repos/KanaryTM/${id}/collaborators`);
+  });
+
+  const results = await Promise.all(requests);
+  const members = results
+    .filter((r) => !!r?.length)
+    .flat(2)
+    .map(getMemberFromGithubData) as TournamentUser[];
+
+  let membersSet: Record<string, TournamentUser> = {};
+  members.forEach((member) => (membersSet[member.id] = member));
+
+  return Array.from(Object.values(membersSet));
+};
+
+const getMemberFromGithubData = (data: any): TournamentUser | void => {
+  if (data?.id && data?.login) {
+    return { id: data.id, name: data.login };
+  }
+};
+
+export const getProjectEvents = async (token: string): Promise<TournamentApprovalEvent[]> => {
+  // const events = await request(token, `/repos/KanaryTM/test-integration/pulls/1/reviews`);
+  // const events = await request(token, `/repos/KanaryTM/${projectId}/events`);
+
+  const pullRequests: GithubPullRequest[] = await request(
+    token,
+    `/repos/KanaryTM/test-integration/pulls`
+  );
+
+  console.log({ pullRequests });
+
+  const pr = pullRequests[0];
+
+  const approvers = await getPullRequestApprovers(token, pr.url);
+
+  console.log({ approvers });
+
+  // return events;
+
+  // console.log({ events, l: events?.length });
+  // console.log({ events: events[0].payload });
+  // const a = events.map((e: any) => e?.actor?.login.concat('---').concat(e?.type));
+  //
+  // console.log({ a });
+
+  // events.forEach((e: any) => console.log(e?.type));
+
   return [];
 };
 
