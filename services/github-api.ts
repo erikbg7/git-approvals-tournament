@@ -57,46 +57,22 @@ const getMemberFromGithubData = (data: any): TournamentUser | void => {
   }
 };
 
-export const getProjectEvents = async (token: string): Promise<TournamentApprovalEvent[]> => {
-  // const events = await request(token, `/repos/KanaryTM/test-integration/pulls/1/reviews`);
-  // const events = await request(token, `/repos/KanaryTM/${projectId}/events`);
+export const getProjectEvents = async (
+  token: string,
+  organization: string,
+  projectId: string
+): Promise<TournamentApprovalEvent[]> => {
+  const url = `/repos/${organization}/${projectId}/pulls`;
+  const pullRequests: GithubPullRequest[] = await request(token, url);
 
-  const pullRequests: GithubPullRequest[] = await request(
-    token,
-    `/repos/KanaryTM/test-integration/pulls`
+  const approversByPullRequest: TournamentUser[][] = await Promise.all(
+    pullRequests.map((pr) => getPullRequestApprovers(token, pr.url))
   );
 
-  console.log({ pullRequests });
-
-  const pr = pullRequests[0];
-
-  const approvers = await getPullRequestApprovers(token, pr.url);
-
-  console.log({ approvers });
-
-  // return events;
-
-  // console.log({ events, l: events?.length });
-  // console.log({ events: events[0].payload });
-  // const a = events.map((e: any) => e?.actor?.login.concat('---').concat(e?.type));
-  //
-  // console.log({ a });
-
-  // events.forEach((e: any) => console.log(e?.type));
-
-  return [];
+  return approversByPullRequest.flat(1).map((approver) => ({
+    author: approver,
+  }));
 };
-
-// /repos/{owner}/{repo}/events
-
-// 'https://api.github.com/users/erikbg7/events{/privacy}',
-//
-// const url = 'https://api.github.com/search/repositories?q=user:erikbg7';
-// const url = 'https://api.github.com/users/erikbg7/repos';
-// const url = 'https://api.github.com/users/erikblanca/events';
-
-// const url2 = 'https://api.github.com/orgs/'.concat(first.login, '/repos');
-// const repos = await fetch(url2, getOptions(token)).then((res) => res.json());
 
 type GithubUser = {
   id: number;
@@ -118,13 +94,13 @@ type GithubPrEvent = {
 const getPullRequestApprovers = async (token: string, pullUrl: string) => {
   const events: GithubPrEvent[] = await request(token, `${pullUrl}/reviews`);
   const tournamentStart = new Date(get15DaysBefore()).getTime();
-  const approvers: Record<string, string> = {};
+  const approvers: Record<string, TournamentUser> = {};
 
   events.map((e) => {
     if (e.state === 'APPROVED' && e.user && e.user.login) {
       const eventSubmission = new Date(e.submitted_at).getTime();
       if (eventSubmission >= tournamentStart) {
-        approvers[e.user.login] = e.user.login;
+        approvers[e.user.login] = { id: e.user.id, name: e.user.login };
       }
     }
   });

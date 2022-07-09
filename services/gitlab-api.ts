@@ -40,27 +40,22 @@ const getProjects = async (token: string, groupId: string): Promise<TournamentPr
   }));
 };
 
-const getAllProjectsMembers = async (token: string, projectIds: string[]) => {
-  const membersRequests = projectIds.map((id: string) => {
+const getMembers = async (token: string, projectIds: string[]) => {
+  const requests = projectIds.map((id: string) => {
     return request(token, `/projects/${id}/members`);
   });
 
-  let tournamentContestants: Record<string, TournamentUser> = {};
-  const members = await Promise.all(membersRequests);
+  const membersByProject = await Promise.all(requests);
+  const members = membersByProject.flat(2);
 
-  const allProjectsMembers = members.flat(2);
-
-  console.warn({ allProjectsMembers });
-  if (allProjectsMembers?.[0]?.error) {
+  if (members?.[0]?.error) {
     throw new Error('token expired');
   }
 
-  allProjectsMembers.forEach((member: TournamentUser) => {
-    tournamentContestants[member.id] = member;
-  });
+  let membersSet: Record<string, TournamentUser> = {};
+  members.forEach((member: TournamentUser) => (membersSet[member.id] = member));
 
-  const allMembers = Object.values(tournamentContestants);
-  return Array.from(allMembers);
+  return Array.from(Object.values(membersSet));
 };
 
 export const getProjectEvents = async (
@@ -76,17 +71,5 @@ export const getProjectEvents = async (
   return events;
 };
 
-const getYYYYMMDD = (date: Date) => {
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-  return `${year}-${month}-${day}`;
-};
 
-const get15DaysBefore = () => {
-  const newDate = new Date();
-  newDate.setDate(newDate.getDate() - 15);
-  return getYYYYMMDD(newDate);
-};
-
-export { getOrganizations, getProjects, getAllProjectsMembers };
+export { getOrganizations, getProjects, getMembers };
