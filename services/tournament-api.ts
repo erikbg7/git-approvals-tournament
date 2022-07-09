@@ -47,12 +47,13 @@ const createTournament = (config: TournamentClientConfig): TournamentClient => {
 const getApprovalsByUser = (
   members: TournamentUser[],
   projects: string[],
-  organization: string
+  organization: string,
+  provider: TournamentProvider,
 ): Promise<UserWithApprovals[]> => {
   return fetch('/api/counter', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ projects, members, organization }),
+    body: JSON.stringify({ projects, members, organization, provider }),
   })
     .then((res) => res.json())
     .then((data) => data?.approvalsByUser);
