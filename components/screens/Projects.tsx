@@ -31,8 +31,8 @@ const Projects = ({ projects }: { projects: TournamentProject[] }) => {
       {projects.map((project) => (
         <Button
           key={project.id}
-          disabled={projectsIds.includes(project.id.toString())}
-          onClick={() => setProjectsIds((ids) => [...ids, project.id.toString()])}
+          disabled={!!chosenProjects.find((p) => p.id === project.id)}
+          onClick={() => setChosenProjects((p) => [...p, project])}
           p={5}
           width={'80%'}
           color={'#fc6d26'}
@@ -43,11 +43,11 @@ const Projects = ({ projects }: { projects: TournamentProject[] }) => {
         </Button>
       ))}
       <br />
-      {!!projectsIds.length && (
+      {!!chosenProjects.length && (
         <Link
           href={{
             pathname,
-            query: { provider, organization: query.organization, projects: projectsIds.join(',') },
+            query: buildQuery(provider as TournamentProvider, query as QueryParams, chosenProjects),
           }}
         >
           <Button
@@ -59,7 +59,7 @@ const Projects = ({ projects }: { projects: TournamentProject[] }) => {
             // transition={{ duration: 0.5 }}
             padding={4}
             width={'50%'}
-            disabled={!projectsIds.length}
+            disabled={!chosenProjects.length}
             color={'#fc6d26'}
             borderColor={'#fc6d26'}
             variant={'outline'}
@@ -70,6 +70,21 @@ const Projects = ({ projects }: { projects: TournamentProject[] }) => {
       )}
     </VStack>
   );
+};
+
+const buildQuery = (
+  provider: TournamentProvider,
+  query: QueryParams,
+  projects: TournamentProject[]
+): QueryParams => {
+  return {
+    provider,
+    organization: query?.organization,
+    projects:
+      provider === PROVIDERS.GITLAB
+        ? projects.map((p) => p.id).join(',')
+        : projects.map((p) => p.name).join(','),
+  };
 };
 
 export { Projects };

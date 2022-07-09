@@ -22,11 +22,12 @@ import { ErrorAlert } from '../ErrorAlert';
 type Props = {
   users: TournamentUser[];
   projects: string;
+  organization: string;
 };
 
 const Results: React.FC<Props> = (props) => {
   useWhyDidYouUpdate('results', props);
-  const { users, projects } = props;
+  const { users, projects, organization } = props;
   const toast = useToast();
   const [results, setResults] = React.useState<UserWithApprovals[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -34,7 +35,7 @@ const Results: React.FC<Props> = (props) => {
   useEffect(() => {
     (async () => {
       try {
-        const approvalsByUser = await getApprovalsByUser(users, projects.split(','));
+        const approvalsByUser = await getApprovalsByUser(users, projects.split(','), organization);
         setResults(sortByApprovalsAmount(approvalsByUser));
         setIsLoading(false);
       } catch (error) {
