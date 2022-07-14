@@ -2,9 +2,10 @@ import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
-import { Button, Heading, VStack } from '@chakra-ui/react';
+import { Button } from '@chakra-ui/react';
 
 import { PROVIDERS } from '../../models/tournament';
+import { AnimatedStep, CONTENT } from '../AnimatedStep';
 import type { QueryParams, TournamentProject, TournamentProvider } from '../../models/tournament';
 
 const Projects = ({ projects }: { projects: TournamentProject[] }) => {
@@ -14,19 +15,7 @@ const Projects = ({ projects }: { projects: TournamentProject[] }) => {
   const [chosenProjects, setChosenProjects] = React.useState<TournamentProject[]>([]);
 
   return (
-    <VStack
-      as={motion.div}
-      justifyContent={'center'}
-      initial={{ y: 30, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      // @ts-ignore
-      transition={{ duration: 2.5 }}
-      // transition={{ duration: 5.8, delay: 2000 }}
-    >
-      <Heading as={'h1'}>Projects</Heading>
-      <Heading as={'h2'} size={'md'} color={'whiteAlpha.700'}>
-        Select the projects from which to read the approvals:
-      </Heading>
+    <AnimatedStep title={CONTENT.project.title} subtitle={CONTENT.project.subtitle}>
       <br />
       {projects.map((project) => (
         <Button
@@ -68,7 +57,7 @@ const Projects = ({ projects }: { projects: TournamentProject[] }) => {
           </Button>
         </Link>
       )}
-    </VStack>
+    </AnimatedStep>
   );
 };
 
