@@ -1,8 +1,9 @@
 import React from 'react';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
-import { Button, Heading, VStack, Box } from '@chakra-ui/react';
+import { Button, Box } from '@chakra-ui/react';
+import { AnimatedStep, CONTENT } from '../AnimatedStep';
 import type { TournamentUser } from '../../models/tournament';
 
 type Props = {
@@ -21,17 +22,7 @@ const Members = ({ members, onTournamentStart }: Props) => {
   };
 
   return (
-    <VStack
-      as={motion.div}
-      justifyContent={'center'}
-      initial={{ y: 30, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      exit={{ y: 60, opacity: 0 }}
-    >
-      <Heading as={'h1'}>Members</Heading>
-      <Heading as={'h2'} size={'md'} color={'whiteAlpha.700'}>
-        Select the tournament participants:
-      </Heading>
+    <AnimatedStep title={CONTENT.members.title} subtitle={CONTENT.members.subtitle}>
       <br />
       <Box display={'flex'} flexWrap={'wrap'} justifyContent={'center'} maxW={'xl'}>
         {members.map((member) => {
@@ -79,7 +70,7 @@ const Members = ({ members, onTournamentStart }: Props) => {
           </Button>
         </Link>
       )}
-    </VStack>
+    </AnimatedStep>
   );
 };
 
