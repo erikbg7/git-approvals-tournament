@@ -1,10 +1,10 @@
 import React from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
-import { Button, Heading, VStack } from '@chakra-ui/react';
+import { Button } from '@chakra-ui/react';
 
 import { OrganizationWarning } from '../OrganizationWarning';
+import { AnimatedStep, CONTENT } from '../AnimatedStep';
 import { PROVIDERS } from '../../models/tournament';
 import type {
   QueryParams,
@@ -17,19 +17,7 @@ const Organizations = ({ organizations }: { organizations: TournamentOrganizatio
   const { provider } = query as QueryParams;
 
   return (
-    <VStack
-      as={motion.div}
-      justifyContent={'center'}
-      initial={{ y: 30, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      exit={{ y: 50, opacity: 0 }}
-      // @ts-ignore
-      transition={{ duration: 0.8, delay: 300 }}
-    >
-      <Heading as={'h1'}>Organizations</Heading>
-      <Heading as={'h2'} size={'md'} color={'whiteAlpha.700'}>
-        Choose an organization to participate in the tournament
-      </Heading>
+    <AnimatedStep title={CONTENT.organization.title} subtitle={CONTENT.organization.subtitle}>
       <br />
       {organizations.map((organization) => (
         <Link key={organization.id} href={{ pathname, query: buildQuery(provider, organization) }}>
@@ -40,7 +28,7 @@ const Organizations = ({ organizations }: { organizations: TournamentOrganizatio
       ))}
       <br />
       {provider === 'github' && <OrganizationWarning />}
-    </VStack>
+    </AnimatedStep>
   );
 };
 
