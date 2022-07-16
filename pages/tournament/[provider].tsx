@@ -29,34 +29,30 @@ const Provider: React.FC<Props> = ({ organizations = [], projects = [], members 
 
   useEffect(() => setTournamentMembers([]), []);
 
-  const hasOrganization = !!query.organization;
-  const hasProjects = !!query.projects;
-  const hasError = !!query.error;
-  const hasResults = !!query.results;
-
   const {
     organization: paramOrganization,
     projects: paramProjects,
     results: paramResults,
+    error: paramError,
     provider: tournamentProvider,
   } = query;
 
   useEffect(() => {
-    const cleanUp = () => !hasResults && setTournamentMembers([]);
+    const cleanUp = () => !paramResults && setTournamentMembers([]);
     Router.events.on('routeChangeComplete', cleanUp);
     return () => {
       Router.events.off('routeChangeComplete', cleanUp);
     };
-  }, [hasResults]);
+  }, [paramResults]);
 
   const handleTournamentStart = (members: TournamentUser[]) => setTournamentMembers(members);
 
-  const showSteps = !tournamentMembers || (tournamentMembers && !hasResults);
+  const showSteps = !tournamentMembers || (tournamentMembers && !paramResults);
 
   return (
     <VStack height={'80vh'} display={'flex'} alignItems={'center'} justifyContent={'start'} p={6}>
       {showSteps && <Steps resolve={!!tournamentMembers.length} />}
-      {paramProjects && paramOrganization && hasResults && (
+      {paramProjects && paramOrganization && paramResults && (
         <Results
           users={tournamentMembers}
           projects={paramProjects}
@@ -64,12 +60,12 @@ const Provider: React.FC<Props> = ({ organizations = [], projects = [], members 
           provider={tournamentProvider}
         />
       )}
-      {!hasResults && !hasOrganization && <Organizations organizations={organizations} />}
-      {!hasResults && hasOrganization && !hasProjects && <Projects projects={projects} />}
-      {!hasResults && hasOrganization && hasProjects && (
+      {!paramResults && !paramOrganization && <Organizations organizations={organizations} />}
+      {!paramResults && paramOrganization && !paramProjects && <Projects projects={projects} />}
+      {!paramResults && paramOrganization && paramProjects && (
         <Members members={members} onTournamentStart={handleTournamentStart} />
       )}
-      {hasError && <ErrorAlert />}
+      {paramError && <ErrorAlert />}
     </VStack>
   );
 };
