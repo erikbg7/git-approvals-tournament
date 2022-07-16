@@ -29,13 +29,17 @@ const Provider: React.FC<Props> = ({ organizations = [], projects = [], members 
 
   useEffect(() => setTournamentMembers([]), []);
 
-  const provider = query?.provider;
   const hasOrganization = !!query.organization;
   const hasProjects = !!query.projects;
   const hasError = !!query.error;
   const hasResults = !!query.results;
 
-  const { organization: paramOrganization, projects: paramProjects, results: paramResults } = query;
+  const {
+    organization: paramOrganization,
+    projects: paramProjects,
+    results: paramResults,
+    provider: tournamentProvider,
+  } = query;
 
   useEffect(() => {
     const cleanUp = () => !hasResults && setTournamentMembers([]);
@@ -107,8 +111,8 @@ const getServerSideProps: GetServerSideProps = async (context) => {
     }
 
     if (params.organization && params.projects) {
-      const projectIdsList = params.projects.split(',');
-      const members = await tournament.getMembers(projectIdsList);
+      const projectIds = params.projects.split(',');
+      const members = await tournament.getMembers(projectIds);
       return {
         props: { members },
       };
