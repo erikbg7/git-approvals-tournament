@@ -52,8 +52,13 @@ const Provider: React.FC<Props> = ({ organizations = [], projects = [], members 
   return (
     <VStack height={'80vh'} display={'flex'} alignItems={'center'} justifyContent={'start'} p={6}>
       {showSteps && <Steps resolve={!!tournamentMembers.length} />}
-      {paramProjects && hasResults && (
-        <Results users={tournamentMembers} projects={paramProjects} />
+      {paramProjects && paramOrganization && hasResults && (
+        <Results
+          users={tournamentMembers}
+          projects={paramProjects}
+          organization={paramOrganization}
+          provider={tournamentProvider}
+        />
       )}
       {!hasResults && !hasOrganization && <Organizations organizations={organizations} />}
       {!hasResults && hasOrganization && !hasProjects && <Projects projects={projects} />}
