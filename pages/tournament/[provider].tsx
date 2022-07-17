@@ -11,12 +11,12 @@ import type {
   TournamentProvider,
   TournamentUser,
 } from '../../models/tournament';
-import { Members } from '../../components/steps/Members';
-import { Organizations } from '../../components/steps/Organizations';
-import { Projects } from '../../components/steps/Projects';
 import { Stepper } from '../../components/stepper/Stepper';
 import { ErrorAlert } from '../../components/ErrorAlert';
 import { createTournament } from '../../services/tournament-api';
+import { AnimatedStep } from '../../components/layout/AnimatedStep';
+import { Members, Organizations, Projects } from '../../components/steps';
+import { STEPS, STEP_CONFIG, getCurrentStep } from '../../components/steps';
 
 type Props = {
   organizations: TournamentOrganization[];
@@ -27,16 +27,20 @@ type Props = {
 const Provider: React.FC<Props> = ({ organizations = [], projects = [], members = [] }) => {
   const router = useRouter();
   const query = router.query as QueryParams;
+  const { error: paramError } = query;
 
-  const { organization: paramOrganization, projects: paramProjects, error: paramError } = query;
+  const step = getCurrentStep(query);
+  const { title, subtitle } = STEP_CONFIG[step];
 
   return (
     <VStack height={'80vh'} display={'flex'} alignItems={'center'} justifyContent={'start'} p={6}>
       <Stepper />
-      {!paramOrganization && <Organizations organizations={organizations} />}
-      {paramOrganization && !paramProjects && <Projects projects={projects} />}
-      {paramOrganization && paramProjects && <Members members={members} />}
-      {paramError && <ErrorAlert />}
+      <AnimatedStep title={title} subtitle={subtitle}>
+        {step === STEPS.ORGANIZATION && <Organizations organizations={organizations} />}
+        {step === STEPS.PROJECTS && <Projects projects={projects} />}
+        {step === STEPS.MEMBERS && <Members members={members} />}
+        {paramError && <ErrorAlert />}
+      </AnimatedStep>
     </VStack>
   );
 };
@@ -49,6 +53,7 @@ const getServerSideProps: GetServerSideProps = async (context) => {
 
     const hasError = !!params?.error;
     const tournament = createTournament({ provider, token });
+    const step = getCurrentStep(params);
 
     if (hasError) {
       return { props: {} };
@@ -61,28 +66,20 @@ const getServerSideProps: GetServerSideProps = async (context) => {
       };
     }
 
-    if (!params.organization) {
-      const organizations = (await tournament.getOrganizations()) || [];
-
-      return {
-        props: { organizations },
-      };
+    if (step === STEPS.ORGANIZATION) {
+      const organizations = await tournament.getOrganizations();
+      return { props: { organizations } };
     }
 
-    if (params.organization && !params.projects) {
-      const projects = await tournament.getProjects(params.organization);
-
-      return {
-        props: { projects },
-      };
+    if (step === STEPS.PROJECTS) {
+      const projects = await tournament.getProjects(params.organization || '');
+      return { props: { projects } };
     }
 
-    if (params.organization && params.projects) {
-      const projectIds = params.projects.split(',');
-      const members = await tournament.getMembers(projectIds);
-      return {
-        props: { members },
-      };
+    if (step === STEPS.MEMBERS) {
+      const projectIds = params.projects?.split(',');
+      const members = await tournament.getMembers(projectIds || []);
+      return { props: { members } };
     }
 
     return {
