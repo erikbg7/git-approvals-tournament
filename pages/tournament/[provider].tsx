@@ -26,19 +26,14 @@ const Provider: React.FC<Props> = ({ organizations = [], projects = [], members 
   const router = useRouter();
   const query = router.query as QueryParams;
 
-  const {
-    organization: paramOrganization,
-    projects: paramProjects,
-    results: paramResults,
-    error: paramError,
-  } = query;
+  const { organization: paramOrganization, projects: paramProjects, error: paramError } = query;
 
   return (
     <VStack height={'80vh'} display={'flex'} alignItems={'center'} justifyContent={'start'} p={6}>
       <Stepper />
-      {!paramResults && !paramOrganization && <Organizations organizations={organizations} />}
-      {!paramResults && paramOrganization && !paramProjects && <Projects projects={projects} />}
-      {!paramResults && paramOrganization && paramProjects && <Members members={members} />}
+      {!paramOrganization && <Organizations organizations={organizations} />}
+      {paramOrganization && !paramProjects && <Projects projects={projects} />}
+      {paramOrganization && paramProjects && <Members members={members} />}
       {paramError && <ErrorAlert />}
     </VStack>
   );

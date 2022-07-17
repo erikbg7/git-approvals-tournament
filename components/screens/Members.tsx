@@ -49,7 +49,6 @@ const Members = ({ members }: Props) => {
               organization: query.organization,
               projects: query.projects,
               members: selectedMembers.map((m) => m.id).join(','),
-              results: true,
             },
           }}
         >

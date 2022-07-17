@@ -25,7 +25,6 @@ type QueryParams = {
   organization?: string;
   projects?: string;
   error?: string;
-  results?: string;
 };
 
 type UserWithApprovals = {
