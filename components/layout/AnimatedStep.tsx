@@ -18,7 +18,8 @@ const AnimatedStep: React.FC<Props> = ({ title, subtitle, children }) => {
       exit={{ y: 50, opacity: 0 }}
     >
       <Heading as={'h1'}>{title}</Heading>
-      <Heading as={'h2'} size={'md'} color={'whiteAlpha.700'}>{subtitle}
+      <Heading as={'h2'} size={'md'} color={'whiteAlpha.700'}>
+        {subtitle}
       </Heading>
       {children}
     </VStack>

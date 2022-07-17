@@ -11,8 +11,10 @@ import type {
   TournamentProvider,
   TournamentUser,
 } from '../../models/tournament';
-import { Members, Organizations, Projects } from '../../components/screens';
-import { Stepper } from '../../components/Stepper';
+import { Members } from '../../components/steps/Members';
+import { Organizations } from '../../components/steps/Organizations';
+import { Projects } from '../../components/steps/Projects';
+import { Stepper } from '../../components/stepper/Stepper';
 import { ErrorAlert } from '../../components/ErrorAlert';
 import { createTournament } from '../../services/tournament-api';
 

@@ -5,8 +5,8 @@ import { useRouter } from 'next/router';
 import { Button } from '@chakra-ui/react';
 
 import { PROVIDERS } from '../../models/tournament';
-import { AnimatedStep, CONTENT } from '../AnimatedStep';
 import type { QueryParams, TournamentProject, TournamentProvider } from '../../models/tournament';
+import { AnimatedStep, CONTENT } from '../layout/AnimatedStep';
 
 const Projects = ({ projects }: { projects: TournamentProject[] }) => {
   const { pathname, query } = useRouter();

@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { Button } from '@chakra-ui/react';
 
 import { OrganizationWarning } from '../OrganizationWarning';
-import { AnimatedStep, CONTENT } from '../AnimatedStep';
+import { AnimatedStep, CONTENT } from '../layout/AnimatedStep';
 import { PROVIDERS } from '../../models/tournament';
 import type {
   QueryParams,

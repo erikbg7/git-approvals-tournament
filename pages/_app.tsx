@@ -3,8 +3,8 @@ import type { AppProps } from 'next/app';
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import { SessionProvider } from 'next-auth/react';
 import { AnimatePresence } from 'framer-motion';
-import { ProgressBar } from '../components/ProgressBar';
-import { NavBar } from '../components/NavBar';
+import { ProgressBar } from '../components/layout/ProgressBar';
+import { NavBar } from '../components/layout/NavBar';
 
 const colors = {
   base: {

@@ -1,46 +1,8 @@
 import React, { useEffect } from 'react';
-import { CheckIcon } from '@chakra-ui/icons';
-import { Circle, Divider, HStack, Text, VStack } from '@chakra-ui/react';
+import { HStack, Text, VStack } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-
-type StepDividerProps = {
-  isCompleted: boolean;
-};
-
-type StepProps = {
-  label: string;
-  isActive: boolean;
-  isCompleted: boolean;
-};
-
-const Step: React.FC<StepProps> = ({ label, isActive, isCompleted }) => {
-  return (
-    <Circle
-      size="40px"
-      color="white"
-      bg={isCompleted ? '#fc6d26' : 'whiteAlpha.300'}
-      borderWidth={isActive || isCompleted ? 2 : 0}
-      borderColor={'#fc6d26'}
-      transition={'all 0.2s ease-in-out'}
-    >
-      <CheckIcon display={isCompleted ? 'inherit' : 'none'} />
-      <Text display={!isCompleted ? 'inherit' : 'none'} fontSize={'lg'} fontWeight={'bold'}>
-        {label}
-      </Text>
-    </Circle>
-  );
-};
-
-const StepDivider: React.FC<StepDividerProps> = ({ isCompleted }) => {
-  return (
-    <Divider
-      bgColor={isCompleted ? '#fc6d26' : 'whiteAlpha.300'}
-      borderBottomWidth={2}
-      orientation="horizontal"
-      transition={'all 0.2s ease-in-out'}
-    />
-  );
-};
+import { Step } from './Step';
+import { StepDivider } from './StepDivider';
 
 type StepsProps = {
   resolve?: boolean;

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 import { Button, Box } from '@chakra-ui/react';
-import { AnimatedStep, CONTENT } from '../AnimatedStep';
+import { AnimatedStep, CONTENT } from '../layout/AnimatedStep';
 import type { TournamentUser } from '../../models/tournament';
 
 type Props = {
