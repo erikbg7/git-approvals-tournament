@@ -6,8 +6,9 @@ export async function middleware(req: NextRequest) {
   if (pathname.startsWith('/tournament')) {
     const isGitlabPathname = pathname.startsWith('/tournament/gitlab');
     const isGithubPathname = pathname.startsWith('/tournament/github');
+    const isResultsPathname = pathname.startsWith('/tournament/results');
 
-    if (!isGitlabPathname && !isGithubPathname) {
+    if (!isGitlabPathname && !isGithubPathname && !isResultsPathname) {
       return NextResponse.rewrite(new URL('/', req.url));
     }
   }
