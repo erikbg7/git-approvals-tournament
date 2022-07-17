@@ -45,10 +45,10 @@ const createTournament = (config: TournamentClientConfig): TournamentClient => {
 };
 
 const getApprovalsByUser = (
-  members: TournamentUser[],
+  members: string[],
   projects: string[],
   organization: string,
-  provider: TournamentProvider,
+  provider: TournamentProvider
 ): Promise<UserWithApprovals[]> => {
   return fetch('/api/counter', {
     method: 'POST',
