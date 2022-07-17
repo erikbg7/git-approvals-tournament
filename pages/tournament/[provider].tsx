@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { GetServerSideProps } from 'next';
 import Router, { useRouter } from 'next/router';
 import { getToken } from 'next-auth/jwt';
@@ -52,14 +52,7 @@ const Provider: React.FC<Props> = ({ organizations = [], projects = [], members 
   return (
     <VStack height={'80vh'} display={'flex'} alignItems={'center'} justifyContent={'start'} p={6}>
       {showSteps && <Steps resolve={!!tournamentMembers.length} />}
-      {paramProjects && paramOrganization && paramResults && (
-        <Results
-          users={tournamentMembers}
-          projects={paramProjects}
-          organization={paramOrganization}
-          provider={tournamentProvider}
-        />
-      )}
+      {paramProjects && paramOrganization && paramResults && <Results users={tournamentMembers} />}
       {!paramResults && !paramOrganization && <Organizations organizations={organizations} />}
       {!paramResults && paramOrganization && !paramProjects && <Projects projects={projects} />}
       {!paramResults && paramOrganization && paramProjects && (

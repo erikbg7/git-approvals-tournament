@@ -17,22 +17,27 @@ import {
 import type {
   UserWithApprovals,
   TournamentUser,
-  TournamentProvider,
+  QueryParams,
 } from '../../models/tournament';
 import { getApprovalsByUser } from '../../services/tournament-api';
 import { buildErrorToast, sortByApprovalsAmount } from '../../utils';
 import { ErrorAlert } from '../ErrorAlert';
+import { useRouter } from 'next/router';
 
-type Props = {
-  users: TournamentUser[];
-  projects: string;
-  organization: string;
-  provider: TournamentProvider;
+type Props = { users: TournamentUser[] };
+
+const DEFAULT_QUERY_PARAMS = {
+  provider: '',
+  organization: '',
+  projects: '',
 };
 
 const Results: React.FC<Props> = (props) => {
   useWhyDidYouUpdate('results', props);
-  const { users, projects, organization, provider } = props;
+  const { users } = props;
+  const { query = DEFAULT_QUERY_PARAMS } = useRouter();
+  const { provider, projects, organization = '' } = query as QueryParams;
+
   const toast = useToast();
   const [results, setResults] = React.useState<UserWithApprovals[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -42,7 +47,7 @@ const Results: React.FC<Props> = (props) => {
       try {
         const approvalsByUser = await getApprovalsByUser(
           users,
-          projects.split(','),
+          projects!.split(','),
           organization,
           provider
         );
