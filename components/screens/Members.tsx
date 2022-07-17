@@ -11,8 +11,8 @@ type Props = {
   onTournamentStart(members: TournamentUser[]): void;
 };
 
-const Members = ({ members, onTournamentStart }: Props) => {
-  const { pathname, query } = useRouter();
+const Members = ({ members }: Props) => {
+  const { query } = useRouter();
   const { provider } = query;
 
   const [selectedMembers, setSelectedMembers] = React.useState<TournamentUser[]>([]);
@@ -44,11 +44,12 @@ const Members = ({ members, onTournamentStart }: Props) => {
       {!!selectedMembers.length && (
         <Link
           href={{
-            pathname,
+            pathname: '/tournament/results',
             query: {
               provider,
               organization: query.organization,
               projects: query.projects,
+              members: selectedMembers.map((m) => m.id).join(','),
               results: true,
             },
           }}
@@ -61,7 +62,6 @@ const Members = ({ members, onTournamentStart }: Props) => {
             transition={{ duration: 0.1 }}
             // transition={{ duration: 0.5 }}
             padding={4}
-            onClick={() => onTournamentStart(selectedMembers)}
             color={'#fc6d26'}
             borderColor={'#fc6d26'}
             variant={'outline'}
