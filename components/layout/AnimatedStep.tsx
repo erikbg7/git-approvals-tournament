@@ -26,19 +26,4 @@ const AnimatedStep: React.FC<Props> = ({ title, subtitle, children }) => {
   );
 };
 
-const CONTENT = {
-  organization: {
-    title: 'Organization',
-    subtitle: 'Choose an organization to participate in the tournament',
-  },
-  project: {
-    title: 'Project',
-    subtitle: 'Select the projects from which to read the approvals:',
-  },
-  members: {
-    title: 'Members',
-    subtitle: 'Select the tournament participants:',
-  },
-};
-
-export { AnimatedStep, CONTENT };
+export { AnimatedStep };

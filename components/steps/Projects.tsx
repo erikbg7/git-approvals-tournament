@@ -6,7 +6,6 @@ import { Button } from '@chakra-ui/react';
 
 import { PROVIDERS } from '../../models/tournament';
 import type { QueryParams, TournamentProject, TournamentProvider } from '../../models/tournament';
-import { AnimatedStep, CONTENT } from '../layout/AnimatedStep';
 
 const Projects = ({ projects }: { projects: TournamentProject[] }) => {
   const { pathname, query } = useRouter();
@@ -15,7 +14,7 @@ const Projects = ({ projects }: { projects: TournamentProject[] }) => {
   const [chosenProjects, setChosenProjects] = React.useState<TournamentProject[]>([]);
 
   return (
-    <AnimatedStep title={CONTENT.project.title} subtitle={CONTENT.project.subtitle}>
+    <>
       <br />
       {projects.map((project) => (
         <Button
@@ -57,7 +56,7 @@ const Projects = ({ projects }: { projects: TournamentProject[] }) => {
           </Button>
         </Link>
       )}
-    </AnimatedStep>
+    </>
   );
 };
 
