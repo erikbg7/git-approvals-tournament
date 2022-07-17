@@ -27,9 +27,8 @@ type Props = {
 const Provider: React.FC<Props> = ({ organizations = [], projects = [], members = [] }) => {
   const router = useRouter();
   const query = router.query as QueryParams;
-  const { error: paramError } = query;
-
   const step = getCurrentStep(query);
+
   const { title, subtitle } = STEP_CONFIG[step];
 
   return (
@@ -39,7 +38,7 @@ const Provider: React.FC<Props> = ({ organizations = [], projects = [], members 
         {step === STEPS.ORGANIZATION && <Organizations organizations={organizations} />}
         {step === STEPS.PROJECTS && <Projects projects={projects} />}
         {step === STEPS.MEMBERS && <Members members={members} />}
-        {paramError && <ErrorAlert />}
+        {step === STEPS.ERROR && <ErrorAlert />}
       </AnimatedStep>
     </VStack>
   );
@@ -51,11 +50,10 @@ const getServerSideProps: GetServerSideProps = async (context) => {
     const params = context.query as QueryParams;
     const provider = context?.params?.provider as TournamentProvider;
 
-    const hasError = !!params?.error;
-    const tournament = createTournament({ provider, token });
     const step = getCurrentStep(params);
+    const tournament = createTournament({ provider, token });
 
-    if (hasError) {
+    if (step === STEPS.ERROR) {
       return { props: {} };
     }
 

@@ -7,6 +7,7 @@ const STEPS = {
   ORGANIZATION: 'organization',
   PROJECTS: 'projects',
   MEMBERS: 'members',
+  ERROR: 'error',
 };
 
 const STEP_CONFIG = {
@@ -22,9 +23,16 @@ const STEP_CONFIG = {
     title: 'Members',
     subtitle: 'Select the tournament participants:',
   },
+  [STEPS.ERROR]: {
+    title: '',
+    subtitle: '',
+  },
 };
 
 const getCurrentStep = (query: QueryParams) => {
+  if (query?.error) {
+    return STEPS.ERROR;
+  }
   if (!query?.organization) {
     return STEPS.ORGANIZATION;
   }

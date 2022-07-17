@@ -1,7 +1,6 @@
 import React from 'react';
-import { Alert, AlertDescription, AlertIcon, AlertTitle, Button, Link } from '@chakra-ui/react';
+import { Alert, AlertDescription, AlertIcon, AlertTitle, Link } from '@chakra-ui/react';
 import NextLink from 'next/link';
-import { signIn } from 'next-auth/react';
 
 const ErrorAlert = () => {
   return (
