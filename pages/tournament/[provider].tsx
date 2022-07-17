@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import type { GetServerSideProps } from 'next';
-import Router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { getToken } from 'next-auth/jwt';
 import { VStack } from '@chakra-ui/react';
 
@@ -11,8 +11,8 @@ import type {
   TournamentProvider,
   TournamentUser,
 } from '../../models/tournament';
-import { Members, Organizations, Projects, Results } from '../../components/screens';
-import { Steps } from '../../components/Stepper';
+import { Members, Organizations, Projects } from '../../components/screens';
+import { Stepper } from '../../components/Stepper';
 import { ErrorAlert } from '../../components/ErrorAlert';
 import { createTournament } from '../../services/tournament-api';
 
@@ -25,39 +25,20 @@ type Props = {
 const Provider: React.FC<Props> = ({ organizations = [], projects = [], members = [] }) => {
   const router = useRouter();
   const query = router.query as QueryParams;
-  const [tournamentMembers, setTournamentMembers] = useState<TournamentUser[]>([]);
-
-  useEffect(() => setTournamentMembers([]), []);
 
   const {
     organization: paramOrganization,
     projects: paramProjects,
     results: paramResults,
     error: paramError,
-    provider: tournamentProvider,
   } = query;
-
-  useEffect(() => {
-    const cleanUp = () => !paramResults && setTournamentMembers([]);
-    Router.events.on('routeChangeComplete', cleanUp);
-    return () => {
-      Router.events.off('routeChangeComplete', cleanUp);
-    };
-  }, [paramResults]);
-
-  const handleTournamentStart = (members: TournamentUser[]) => setTournamentMembers(members);
-
-  const showSteps = !tournamentMembers || (tournamentMembers && !paramResults);
 
   return (
     <VStack height={'80vh'} display={'flex'} alignItems={'center'} justifyContent={'start'} p={6}>
-      {showSteps && <Steps resolve={!!tournamentMembers.length} />}
-      {paramProjects && paramOrganization && paramResults && <Results users={tournamentMembers} />}
+      <Stepper />
       {!paramResults && !paramOrganization && <Organizations organizations={organizations} />}
       {!paramResults && paramOrganization && !paramProjects && <Projects projects={projects} />}
-      {!paramResults && paramOrganization && paramProjects && (
-        <Members members={members} onTournamentStart={handleTournamentStart} />
-      )}
+      {!paramResults && paramOrganization && paramProjects && <Members members={members} />}
       {paramError && <ErrorAlert />}
     </VStack>
   );

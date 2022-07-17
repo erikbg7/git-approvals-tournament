@@ -43,10 +43,10 @@ const StepDivider: React.FC<StepDividerProps> = ({ isCompleted }) => {
 };
 
 type StepsProps = {
-  resolve: boolean;
+  resolve?: boolean;
 };
 
-const Steps: React.FC<StepsProps> = ({ resolve }) => {
+const Stepper: React.FC<StepsProps> = ({ resolve = false }) => {
   const { query } = useRouter();
   const [currentStep, setCurrentStep] = React.useState(1);
 
@@ -89,4 +89,4 @@ const Steps: React.FC<StepsProps> = ({ resolve }) => {
   );
 };
 
-export { Steps };
+export { Stepper };

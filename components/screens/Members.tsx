@@ -8,7 +8,6 @@ import type { TournamentUser } from '../../models/tournament';
 
 type Props = {
   members: TournamentUser[];
-  onTournamentStart(members: TournamentUser[]): void;
 };
 
 const Members = ({ members }: Props) => {
