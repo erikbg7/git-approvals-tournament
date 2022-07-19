@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 import { Button, Box } from '@chakra-ui/react';
 import type { TournamentUser } from '../../models/tournament';
-import { AnimatedStep } from '../layout/AnimatedStep';
-import { STEP_CONFIG, STEPS } from './index';
+import MemberCard from '../cards/MemberCard';
 
 type Props = {
   members: TournamentUser[];
@@ -14,32 +13,27 @@ type Props = {
 const Members = ({ members }: Props) => {
   const { query } = useRouter();
   const { provider } = query;
-  const { title, subtitle } = STEP_CONFIG[STEPS.MEMBERS];
 
   const [selectedMembers, setSelectedMembers] = React.useState<TournamentUser[]>([]);
 
-  const handleSelectedMember = (member: TournamentUser) => () => {
+  const isSelected = (memberId: number) => !!selectedMembers.find((m) => m.id === memberId);
+
+  const handleSelectedMember = useCallback((member: TournamentUser) => {
     setSelectedMembers((prev) => [...prev, member]);
-  };
+  }, []);
 
   return (
     <>
       <br />
       <Box display={'flex'} flexWrap={'wrap'} justifyContent={'center'} maxW={'xl'}>
-        {members.map((member) => {
-          const isSelected = !!selectedMembers.find((m) => m.id === member.id);
-
-          return (
-            <Button
-              disabled={isSelected}
-              key={member.id}
-              onClick={handleSelectedMember(member)}
-              m={1}
-            >
-              {member.name}
-            </Button>
-          );
-        })}
+        {members.map((member) => (
+          <MemberCard
+            id={member.id}
+            name={member.name}
+            disabled={isSelected(member.id)}
+            onClick={handleSelectedMember}
+          />
+        ))}
       </Box>
       <br />
       {!!selectedMembers.length && (
