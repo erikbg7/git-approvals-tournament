@@ -6,32 +6,35 @@ import { Button } from '@chakra-ui/react';
 
 import { PROVIDERS } from '../../models/tournament';
 import type { QueryParams, TournamentProject, TournamentProvider } from '../../models/tournament';
-import { AnimatedStep } from '../layout/AnimatedStep';
-import { STEP_CONFIG, STEPS } from './index';
+import ProjectCard from '../cards/ProjectCard';
 
 const Projects = ({ projects }: { projects: TournamentProject[] }) => {
   const { pathname, query } = useRouter();
-  const { provider } = query;
-  const { title, subtitle } = STEP_CONFIG[STEPS.PROJECTS];
+  const [chosenProjects, setChosenProjects] = useState<TournamentProject[]>([]);
 
-  const [chosenProjects, setChosenProjects] = React.useState<TournamentProject[]>([]);
+  const { provider } = query;
+  const nextQuery = buildQuery(
+    provider as TournamentProvider,
+    query as QueryParams,
+    chosenProjects
+  );
+
+  const isDisabled = (projectId: number) => !!chosenProjects.find((p) => p.id === projectId);
+
+  const handleChosenProject = useCallback((project: TournamentProject) => {
+    setChosenProjects((prev) => [...prev, project]);
+  }, []);
 
   return (
     <>
       <br />
       {projects.map((project) => (
-        <Button
-          key={project.id}
-          disabled={!!chosenProjects.find((p) => p.id === project.id)}
-          onClick={() => setChosenProjects((p) => [...p, project])}
-          p={5}
-          width={'80%'}
-          color={'#fc6d26'}
-          fontSize={'xl'}
-          fontWeight={'bold'}
-        >
-          {project.name}
-        </Button>
+        <ProjectCard
+          id={project.id}
+          disabled={isDisabled(project.id)}
+          onClick={handleChosenProject}
+          name={project.name}
+        />
       ))}
       <br />
       {!!chosenProjects.length && (
