@@ -10,13 +10,16 @@ import type {
   TournamentOrganization,
   TournamentProvider,
 } from '../../models/tournament';
+import { AnimatedStep } from '../layout/AnimatedStep';
+import { STEP_CONFIG, STEPS } from './index';
 
 const Organizations = ({ organizations }: { organizations: TournamentOrganization[] }) => {
   const { pathname, query } = useRouter();
   const { provider } = query as QueryParams;
+  const { title, subtitle } = STEP_CONFIG[STEPS.ORGANIZATION];
 
   return (
-    <>
+    <AnimatedStep title={title} subtitle={subtitle}>
       <br />
       {organizations.map((organization) => (
         <Link key={organization.id} href={{ pathname, query: buildQuery(provider, organization) }}>
@@ -27,7 +30,7 @@ const Organizations = ({ organizations }: { organizations: TournamentOrganizatio
       ))}
       <br />
       {provider === 'github' && <OrganizationWarning />}
-    </>
+    </AnimatedStep>
   );
 };
 

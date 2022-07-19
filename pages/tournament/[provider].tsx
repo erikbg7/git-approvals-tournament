@@ -14,9 +14,8 @@ import type {
 import { Stepper } from '../../components/stepper/Stepper';
 import { ErrorAlert } from '../../components/ErrorAlert';
 import { createTournament } from '../../services/tournament-api';
-import { AnimatedStep } from '../../components/layout/AnimatedStep';
 import { Members, Organizations, Projects } from '../../components/steps';
-import { STEPS, STEP_CONFIG, getCurrentStep } from '../../components/steps';
+import { STEPS, getCurrentStep } from '../../components/steps';
 
 type Props = {
   organizations: TournamentOrganization[];
@@ -29,17 +28,13 @@ const Provider: React.FC<Props> = ({ organizations = [], projects = [], members 
   const query = router.query as QueryParams;
   const step = getCurrentStep(query);
 
-  const { title, subtitle } = STEP_CONFIG[step];
-
   return (
     <VStack height={'80vh'} display={'flex'} alignItems={'center'} justifyContent={'start'} p={6}>
       <Stepper />
-      <AnimatedStep title={title} subtitle={subtitle}>
-        {step === STEPS.ORGANIZATION && <Organizations organizations={organizations} />}
-        {step === STEPS.PROJECTS && <Projects projects={projects} />}
-        {step === STEPS.MEMBERS && <Members members={members} />}
-        {step === STEPS.ERROR && <ErrorAlert />}
-      </AnimatedStep>
+      {step === STEPS.ORGANIZATION && <Organizations organizations={organizations} />}
+      {step === STEPS.PROJECTS && <Projects projects={projects} />}
+      {step === STEPS.MEMBERS && <Members members={members} />}
+      {step === STEPS.ERROR && <ErrorAlert />}
     </VStack>
   );
 };

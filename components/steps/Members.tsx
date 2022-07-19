@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 import { Button, Box } from '@chakra-ui/react';
 import type { TournamentUser } from '../../models/tournament';
+import { AnimatedStep } from '../layout/AnimatedStep';
+import { STEP_CONFIG, STEPS } from './index';
 
 type Props = {
   members: TournamentUser[];
@@ -12,6 +14,7 @@ type Props = {
 const Members = ({ members }: Props) => {
   const { query } = useRouter();
   const { provider } = query;
+  const { title, subtitle } = STEP_CONFIG[STEPS.MEMBERS];
 
   const [selectedMembers, setSelectedMembers] = React.useState<TournamentUser[]>([]);
 
@@ -20,7 +23,7 @@ const Members = ({ members }: Props) => {
   };
 
   return (
-    <>
+    <AnimatedStep title={title} subtitle={subtitle}>
       <br />
       <Box display={'flex'} flexWrap={'wrap'} justifyContent={'center'} maxW={'xl'}>
         {members.map((member) => {
@@ -67,7 +70,7 @@ const Members = ({ members }: Props) => {
           </Button>
         </Link>
       )}
-    </>
+    </AnimatedStep>
   );
 };
 
