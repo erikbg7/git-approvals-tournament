@@ -8,7 +8,7 @@ const STEPS = {
   PROJECTS: 'projects',
   MEMBERS: 'members',
   ERROR: 'error',
-};
+} as const;
 
 const STEP_CONFIG = {
   [STEPS.ORGANIZATION]: {

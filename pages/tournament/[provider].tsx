@@ -15,6 +15,7 @@ import { Stepper } from '../../components/stepper/Stepper';
 import { ErrorAlert } from '../../components/ErrorAlert';
 import { createTournament } from '../../services/tournament-api';
 import { Members, Organizations, Projects } from '../../components/steps';
+import { AnimatedStep } from '../../components/layout/AnimatedStep';
 import { STEPS, getCurrentStep } from '../../components/steps';
 
 type Props = {
@@ -31,10 +32,26 @@ const Provider: React.FC<Props> = ({ organizations = [], projects = [], members 
   return (
     <VStack height={'80vh'} display={'flex'} alignItems={'center'} justifyContent={'start'} p={6}>
       <Stepper />
-      {step === STEPS.ORGANIZATION && <Organizations organizations={organizations} />}
-      {step === STEPS.PROJECTS && <Projects projects={projects} />}
-      {step === STEPS.MEMBERS && <Members members={members} />}
-      {step === STEPS.ERROR && <ErrorAlert />}
+      {step === STEPS.ORGANIZATION && (
+        <AnimatedStep step={step}>
+          <Organizations organizations={organizations} />
+        </AnimatedStep>
+      )}
+      {step === STEPS.PROJECTS && (
+        <AnimatedStep step={step}>
+          <Projects projects={projects} />
+        </AnimatedStep>
+      )}
+      {step === STEPS.MEMBERS && (
+        <AnimatedStep step={step}>
+          <Members members={members} />
+        </AnimatedStep>
+      )}
+      {step === STEPS.ERROR && (
+        <AnimatedStep step={step}>
+          <ErrorAlert />
+        </AnimatedStep>
+      )}
     </VStack>
   );
 };

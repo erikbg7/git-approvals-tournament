@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
@@ -17,7 +17,7 @@ const Projects = ({ projects }: { projects: TournamentProject[] }) => {
   const [chosenProjects, setChosenProjects] = React.useState<TournamentProject[]>([]);
 
   return (
-    <AnimatedStep title={title} subtitle={subtitle}>
+    <>
       <br />
       {projects.map((project) => (
         <Button
@@ -35,22 +35,15 @@ const Projects = ({ projects }: { projects: TournamentProject[] }) => {
       ))}
       <br />
       {!!chosenProjects.length && (
-        <Link
-          href={{
-            pathname,
-            query: buildQuery(provider as TournamentProvider, query as QueryParams, chosenProjects),
-          }}
-        >
+        <Link href={{ pathname, query: nextQuery }}>
           <Button
             as={motion.div}
             initial={{ y: 5, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             // @ts-ignore
             transition={{ duration: 0.1 }}
-            // transition={{ duration: 0.5 }}
             padding={4}
             width={'50%'}
-            disabled={!chosenProjects.length}
             color={'#fc6d26'}
             borderColor={'#fc6d26'}
             variant={'outline'}
@@ -59,7 +52,7 @@ const Projects = ({ projects }: { projects: TournamentProject[] }) => {
           </Button>
         </Link>
       )}
-    </AnimatedStep>
+    </>
   );
 };
 

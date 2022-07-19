@@ -23,7 +23,7 @@ const Members = ({ members }: Props) => {
   };
 
   return (
-    <AnimatedStep title={title} subtitle={subtitle}>
+    <>
       <br />
       <Box display={'flex'} flexWrap={'wrap'} justifyContent={'center'} maxW={'xl'}>
         {members.map((member) => {
@@ -60,7 +60,6 @@ const Members = ({ members }: Props) => {
             animate={{ y: 0, opacity: 1 }}
             // @ts-ignore
             transition={{ duration: 0.1 }}
-            // transition={{ duration: 0.5 }}
             padding={4}
             color={'#fc6d26'}
             borderColor={'#fc6d26'}
@@ -70,7 +69,7 @@ const Members = ({ members }: Props) => {
           </Button>
         </Link>
       )}
-    </AnimatedStep>
+    </>
   );
 };
 

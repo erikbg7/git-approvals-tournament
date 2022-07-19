@@ -1,14 +1,16 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Heading, VStack } from '@chakra-ui/react';
+import { STEP_CONFIG, STEPS } from '../steps';
 
 type Props = {
-  title: string;
-  subtitle: string;
+  step: typeof STEPS[keyof typeof STEPS];
   children: React.ReactNode;
 };
 
-const AnimatedStep: React.FC<Props> = ({ title, subtitle, children }) => {
+const AnimatedStep: React.FC<Props> = ({ step, children }) => {
+  const { title, subtitle } = STEP_CONFIG[step];
+
   return (
     <VStack
       as={motion.div}
