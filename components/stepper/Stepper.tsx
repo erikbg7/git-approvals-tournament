@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { HStack, Text, VStack } from '@chakra-ui/react';
+import { Box, HStack, Text, VStack } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { Step } from './Step';
 import { StepDivider } from './StepDivider';
@@ -30,22 +30,28 @@ const Stepper: React.FC<StepsProps> = ({ resolve = false }) => {
   const isStepDone = (step: number) => step < currentStep;
 
   return (
-    <VStack mx={'auto'} mb={20} mt={7} display={{ base: 'none', sm: 'none', md: 'inherit' }}>
+    <VStack mx={'auto'} my={5} display={{ base: 'none', sm: 'none', md: 'inherit' }}>
       <HStack w={'90vw'} maxW={'3xl'}>
-        <Step label={'1'} isActive={isStep(1)} isCompleted={isStepsAfter([1])} />
-        <Text fontSize={'lg'} fontWeight={'bold'}>
-          Organization
-        </Text>
+        <Box display={'flex'} alignItems={'center'} mx={2} opacity={isStep(1) ? 1 : 0.5}>
+          <Step label={'1'} isActive={isStep(1)} isCompleted={isStepsAfter([1])} />
+          <Text fontSize={'lg'} fontWeight={'bold'} ml={2}>
+            Organization
+          </Text>
+        </Box>
         <StepDivider isCompleted={isStepDone(1)} />
-        <Step label={'2'} isActive={isStep(2)} isCompleted={isStepsAfter([2])} />
-        <Text fontSize={'lg'} fontWeight={'bold'}>
-          Projects
-        </Text>
+        <Box display={'flex'} alignItems={'center'} mx={2} opacity={isStep(2) ? 1 : 0.5}>
+          <Step label={'2'} isActive={isStep(2)} isCompleted={isStepsAfter([2])} />
+          <Text fontSize={'lg'} fontWeight={'bold'} ml={2}>
+            Projects
+          </Text>
+        </Box>
         <StepDivider isCompleted={isStepDone(2)} />
-        <Step label={'3'} isActive={isStep(3)} isCompleted={isStepsAfter([2]) && resolve} />
-        <Text fontSize={'lg'} fontWeight={'bold'}>
-          Members
-        </Text>
+        <Box display={'flex'} alignItems={'center'} mx={2} opacity={isStep(3) ? 1 : 0.5}>
+          <Step label={'3'} isActive={isStep(3)} isCompleted={isStepsAfter([2]) && resolve} />
+          <Text fontSize={'lg'} fontWeight={'bold'} ml={2}>
+            Members
+          </Text>
+        </Box>
       </HStack>
     </VStack>
   );
