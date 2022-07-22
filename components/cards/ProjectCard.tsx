@@ -18,6 +18,7 @@ const ProjectCard: React.FC<Props> = ({ id, disabled, name, onClick }) => {
       disabled={disabled}
       onClick={() => onClick(project)}
       p={5}
+      mb={2}
       width={'80%'}
       color={'#fc6d26'}
       fontSize={'xl'}

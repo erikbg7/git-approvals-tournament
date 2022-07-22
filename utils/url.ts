@@ -1,4 +1,9 @@
-import { PROVIDERS, TournamentOrganization, TournamentProvider } from '../models/tournament';
+import {
+  PROVIDERS,
+  TournamentOrganization,
+  TournamentProject,
+  TournamentProvider,
+} from '../models/tournament';
 
 const getOrganizationParam = (organization: TournamentOrganization, provider: TournamentProvider) =>
   ({
@@ -6,4 +11,10 @@ const getOrganizationParam = (organization: TournamentOrganization, provider: To
     [PROVIDERS.GITLAB]: organization.name,
   }[provider]);
 
-export { getOrganizationParam };
+const getProjectsParam = (projects: TournamentProject[], provider: TournamentProvider) =>
+  ({
+    [PROVIDERS.GITHUB]: projects.map((p) => p.name).join(','),
+    [PROVIDERS.GITLAB]: projects.map((p) => p.id).join(','),
+  }[provider]);
+
+export { getOrganizationParam, getProjectsParam };
