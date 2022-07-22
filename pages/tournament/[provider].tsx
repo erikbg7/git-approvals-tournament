@@ -30,7 +30,14 @@ const Provider: React.FC<Props> = ({ organizations = [], projects = [], members 
   const step = getCurrentStep(query);
 
   return (
-    <VStack height={'80vh'} display={'flex'} alignItems={'center'} justifyContent={'start'} p={6}>
+    <VStack
+      height={'80vh'}
+      display={'flex'}
+      alignItems={'center'}
+      justifyContent={'start'}
+      textAlign={'center'}
+      p={6}
+    >
       <Stepper />
       <Divider />
       {step === STEPS.ORGANIZATION && (

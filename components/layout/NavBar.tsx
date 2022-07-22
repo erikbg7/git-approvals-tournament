@@ -78,7 +78,7 @@ const NavBar = ({ children }: { children: ReactNode }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <>
+    <Box minHeight={'100vh'}>
       <Box bg={'#18181b'} color={'#EFEFF1'} px={4}>
         <Flex h={16} maxW={'7xl'} m={'auto'} alignItems={'center'} justifyContent={'space-between'}>
           <HStack spacing={8} alignItems={'center'}>
@@ -104,7 +104,7 @@ const NavBar = ({ children }: { children: ReactNode }) => {
       </Box>
 
       {children}
-    </>
+    </Box>
   );
 };
 
