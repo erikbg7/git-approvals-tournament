@@ -1,41 +1,29 @@
 import React from 'react';
 import { Button } from '@chakra-ui/react';
-import {
-  PROVIDERS,
-  QueryParams,
-  TournamentOrganization,
-  TournamentProject,
-  TournamentProvider,
-} from '../../models/tournament';
+import { QueryParams, TournamentOrganization } from '../../models/tournament';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { getOrganizationParam } from '../../utils/url';
 
 type Props = {
   id: number;
   name: string;
-  pathname: string;
-  provider: TournamentProvider;
 };
 
-const OrganizationCard: React.FC<Props> = ({ id, pathname, provider, name }) => {
+const OrganizationCard: React.FC<Props> = ({ id, name }) => {
+  const { query } = useRouter();
+  const { provider } = query as QueryParams;
+
   const organization = { id, name } as TournamentOrganization;
+  const organizationQuery = getOrganizationParam(organization, provider);
 
   return (
-    <Link key={id} href={{ pathname, query: buildQuery(provider, organization) }}>
+    <Link key={id} href={{ query: { ...query, organization: organizationQuery } }}>
       <Button p={10} color={'#fc6d26'} fontSize={'xl'} fontWeight={'bold'}>
         {name}
       </Button>
     </Link>
   );
-};
-
-const buildQuery = (
-  provider: TournamentProvider,
-  organization: TournamentOrganization
-): QueryParams => {
-  return {
-    provider,
-    organization: provider === PROVIDERS.GITLAB ? organization.id.toString() : organization.name,
-  };
 };
 
 export default React.memo(OrganizationCard);
