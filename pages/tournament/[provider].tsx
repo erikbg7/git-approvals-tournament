@@ -32,6 +32,7 @@ const Provider: React.FC<Props> = ({ organizations = [], projects = [], members 
   return (
     <VStack height={'80vh'} display={'flex'} alignItems={'center'} justifyContent={'start'} p={6}>
       <Stepper />
+      <Divider />
       {step === STEPS.ORGANIZATION && (
         <AnimatedStep step={step}>
           <Organizations organizations={organizations} />

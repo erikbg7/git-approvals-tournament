@@ -16,7 +16,7 @@ const STEP_CONFIG = {
     subtitle: 'Choose an organization to participate in the tournament',
   },
   [STEPS.PROJECTS]: {
-    title: 'Project',
+    title: 'Projects',
     subtitle: 'Select the projects from which to read the approvals:',
   },
   [STEPS.MEMBERS]: {

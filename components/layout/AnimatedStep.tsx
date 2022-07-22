@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Heading, VStack } from '@chakra-ui/react';
+import { Box, Heading } from '@chakra-ui/react';
 import { STEP_CONFIG, STEPS } from '../steps';
 
 type Props = {
@@ -12,9 +12,15 @@ const AnimatedStep: React.FC<Props> = ({ step, children }) => {
   const { title, subtitle } = STEP_CONFIG[step];
 
   return (
-    <VStack
+    <Box
       as={motion.div}
-      justifyContent={'center'}
+      p={6}
+      height={'full'}
+      width={'full'}
+      display={'flex'}
+      flexDirection={'column'}
+      justifyContent={'start'}
+      alignItems={'center'}
       initial={{ y: 30, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: 50, opacity: 0 }}
@@ -24,7 +30,7 @@ const AnimatedStep: React.FC<Props> = ({ step, children }) => {
         {subtitle}
       </Heading>
       {children}
-    </VStack>
+    </Box>
   );
 };
 
