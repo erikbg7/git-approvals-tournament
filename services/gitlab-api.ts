@@ -53,7 +53,9 @@ const getMembers = async (token: string, projectIds: string[]) => {
   }
 
   let membersSet: Record<string, TournamentUser> = {};
-  members.forEach((member: TournamentUser) => (membersSet[member.id] = member));
+  members
+    .map((m) => ({ name: m.name, id: m.id, avatarUrl: m.avatar_url }))
+    .forEach((member: TournamentUser) => (membersSet[member.id] = member));
 
   return Array.from(Object.values(membersSet));
 };

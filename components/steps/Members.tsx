@@ -23,11 +23,12 @@ const Members = ({ members }: Props) => {
 
   return (
     <>
-      <Box display={'flex'} flexWrap={'wrap'} justifyContent={'center'} maxW={'xl'}>
+      <Box display={'flex'} flexWrap={'wrap'} justifyContent={'center'} maxW={'xl'} my={5}>
         {members.map((member) => (
           <MemberCard
             id={member.id}
             name={member.name}
+            url={member.avatarUrl}
             disabled={isSelected(member.id)}
             onClick={handleSelectedMember}
           />

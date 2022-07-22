@@ -7,8 +7,8 @@ import {
 
 const getOrganizationParam = (organization: TournamentOrganization, provider: TournamentProvider) =>
   ({
-    [PROVIDERS.GITHUB]: organization.id.toString(),
-    [PROVIDERS.GITLAB]: organization.name,
+    [PROVIDERS.GITHUB]: organization.name,
+    [PROVIDERS.GITLAB]: organization.id.toString(),
   }[provider]);
 
 const getProjectsParam = (projects: TournamentProject[], provider: TournamentProvider) =>

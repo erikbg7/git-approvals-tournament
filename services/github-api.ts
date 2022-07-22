@@ -53,7 +53,7 @@ const getMembers = async (token: string, projectIds: string[]) => {
 
 const getMemberFromGithubData = (data: any): TournamentUser | void => {
   if (data?.id && data?.login) {
-    return { id: data.id, name: data.login };
+    return { id: data.id, name: data.login, avatarUrl: data.avatar_url };
   }
 };
 

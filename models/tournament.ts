@@ -18,6 +18,7 @@ type TournamentProject = {
 type TournamentUser = {
   id: number;
   name: string;
+  avatarUrl?: string;
 };
 
 type QueryParams = {
