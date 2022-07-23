@@ -33,6 +33,7 @@ const countGithubApprovals = async (req: NextApiRequest, token: JWT) => {
       usersWithApprovals[author.name] = {
         name: author.name,
         approvals: approvals + 1,
+        avatarUrl: author?.avatarUrl,
       };
     }
   });

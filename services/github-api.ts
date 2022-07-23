@@ -77,6 +77,7 @@ export const getProjectEvents = async (
 type GithubUser = {
   id: number;
   login: string;
+  avatar_url: string;
 };
 
 type GithubPullRequest = {
@@ -100,7 +101,11 @@ const getPullRequestApprovers = async (token: string, pullUrl: string) => {
     if (e.state === 'APPROVED' && e.user && e.user.login) {
       const eventSubmission = new Date(e.submitted_at).getTime();
       if (eventSubmission >= tournamentStart) {
-        approvers[e.user.login] = { id: e.user.id, name: e.user.login };
+        approvers[e.user.login] = {
+          id: e.user.id,
+          name: e.user.login,
+          avatarUrl: e.user?.avatar_url,
+        };
       }
     }
   });
