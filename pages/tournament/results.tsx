@@ -1,6 +1,8 @@
-import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import Image from 'next/image';
 import {
+  Box,
   Heading,
   Spinner,
   Table,
@@ -74,14 +76,21 @@ const Results: React.FC = () => {
           <Table variant="simple">
             <Thead>
               <Tr>
-                <Th>Github User</Th>
-                <Th>N. of Approvals</Th>
+                <Th textAlign={'center'}>Github User</Th>
+                <Th textAlign={'center'}>N. of Approvals</Th>
               </Tr>
             </Thead>
             <Tbody>
               {results.map((user) => (
                 <Tr key={user.id}>
-                  <Td textAlign={'center'}>{user.name}</Td>
+                  <Td textAlign={'center'}>
+                    <Box display={'flex'} alignItems={'center'}>
+                      <Box display={'flex'} overflow={'hidden'} borderRadius={'full'} m={2}>
+                        <Image src={user.avatarUrl || ''} alt={user.name} width={40} height={40} />
+                      </Box>
+                      {user.name}
+                    </Box>
+                  </Td>
                   <Td textAlign={'center'}>{user.approvals}</Td>
                 </Tr>
               ))}

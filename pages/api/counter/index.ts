@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
-import type { TournamentProvider, TournamentUser } from '../../../models/tournament';
+import type { TournamentProvider } from '../../../models/tournament';
 import { getProjectEvents } from '../../../services/github-api';
 import { getProjectEvents as getGitlabProjectEvents } from '../../../services/gitlab-api';
 
