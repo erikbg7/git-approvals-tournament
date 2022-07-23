@@ -6,7 +6,7 @@ const PROVIDERS = {
 type TournamentProvider = typeof PROVIDERS[keyof typeof PROVIDERS];
 
 type TournamentOrganization = {
-  id: number;
+  id: string;
   name: string;
 };
 

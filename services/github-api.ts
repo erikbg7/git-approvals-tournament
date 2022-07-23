@@ -1,5 +1,10 @@
 import { config } from '../config';
-import { TournamentApprovalEvent, TournamentProject, TournamentUser } from '../models/tournament';
+import {
+  TournamentApprovalEvent,
+  TournamentOrganization,
+  TournamentProject,
+  TournamentUser,
+} from '../models/tournament';
 import { get15DaysBefore } from '../utils';
 
 const buildHeaders = (token: string) => ({
@@ -17,18 +22,27 @@ const request = async (token: string, pathUrl: string) => {
   return result.json();
 };
 
-const getOrganizations = async (token: string): Promise<any> => {
-  const organizations = await request(token, '/user/orgs');
-  return organizations.map((o = {} as any) => {
-    if (o.id && o.login) {
-      return { id: o.id, name: o.login };
-    }
-  });
+type GithubOrganization = {
+  id: string;
+  login: string;
 };
 
-const getProjects = async (token: string, groupId: string): Promise<any> => {
-  const projects = await request(token, `/orgs/${groupId}/repos`);
-  return projects.map((project: TournamentProject) => ({
+const getOrganizations = async (token: string): Promise<TournamentOrganization[]> => {
+  const organizations = await request(token, '/user/orgs');
+  return organizations.map((org: GithubOrganization) => ({
+    id: org.id,
+    name: org.login,
+  }));
+};
+
+type GithubProject = {
+  id: string;
+  name: string;
+};
+
+const getProjects = async (token: string, orgId: string): Promise<TournamentProject[]> => {
+  const projects = await request(token, `/orgs/${orgId}/repos`);
+  return projects.map((project: GithubProject) => ({
     id: project.id,
     name: project.name,
   }));
@@ -39,22 +53,16 @@ const getMembers = async (token: string, projectIds: string[]) => {
     return request(token, `/repos/KanaryTM/${id}/collaborators`);
   });
 
+  const uniqueMembers: Record<string, TournamentUser> = {};
   const results = await Promise.all(requests);
-  const members = results
+
+  results
     .filter((r) => !!r?.length)
     .flat(2)
-    .map(getMemberFromGithubData) as TournamentUser[];
+    .map((m) => ({ id: m.id, name: m.login, avatarUrl: m.avatar_url }))
+    .forEach((member) => (uniqueMembers[member.id] = member));
 
-  let membersSet: Record<string, TournamentUser> = {};
-  members.forEach((member) => (membersSet[member.id] = member));
-
-  return Array.from(Object.values(membersSet));
-};
-
-const getMemberFromGithubData = (data: any): TournamentUser | void => {
-  if (data?.id && data?.login) {
-    return { id: data.id, name: data.login, avatarUrl: data.avatar_url };
-  }
+  return Array.from(Object.values(uniqueMembers));
 };
 
 export const getProjectEvents = async (
