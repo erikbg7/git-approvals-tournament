@@ -3,7 +3,6 @@ import type {
   TournamentOrganization,
   TournamentProject,
   TournamentUser,
-  TournamentApprovalEvent,
 } from '../models/tournament';
 import { get15DaysBefore } from '../utils';
 
@@ -60,10 +59,14 @@ const getMembers = async (token: string, projectIds: string[]) => {
   return Array.from(Object.values(membersSet));
 };
 
+type GitlabProjectEvent = {
+  author: { id: number; name: string; username: string; avatar_url: string };
+};
+
 export const getProjectEvents = async (
   token: string,
   projectId: string
-): Promise<TournamentApprovalEvent[]> => {
+): Promise<GitlabProjectEvent[]> => {
   const date = get15DaysBefore();
   const events = await request(
     token,
@@ -72,6 +75,5 @@ export const getProjectEvents = async (
 
   return events;
 };
-
 
 export { getOrganizations, getProjects, getMembers };

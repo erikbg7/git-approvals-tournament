@@ -7,7 +7,7 @@ import { getProjectEvents as getGitlabProjectEvents } from '../../../services/gi
 import { getToken, JWT } from 'next-auth/jwt';
 import { PROVIDERS } from '../../../models/tournament';
 
-type UserWithApprovals = { name: string; approvals: number };
+type UserWithApprovals = { name: string; approvals: number; avatarUrl?: string };
 type ApprovalsByUser = { approvalsByUser: UserWithApprovals[] };
 
 const countGithubApprovals = async (req: NextApiRequest, token: JWT) => {
@@ -41,16 +41,11 @@ const countGithubApprovals = async (req: NextApiRequest, token: JWT) => {
 };
 
 const countGitlabApprovals = async (req: NextApiRequest, token: JWT) => {
-  const contestants: TournamentUser[] = req.body?.members || [];
+  const contestants: string[] = req.body?.members || [];
   const projectIds: string[] = req.body?.projects || [];
 
   let usersWithApprovals: Record<string, UserWithApprovals> = {};
-  let contestantsIds: string[] = [];
-
-  contestants.forEach((contestant) => {
-    contestantsIds.push(contestant.id.toString());
-    usersWithApprovals[contestant.id.toString()] = { ...contestant, approvals: 0 };
-  });
+  let contestantsIds: string[] = [...contestants];
 
   const requests = projectIds.map((projectId) =>
     getGitlabProjectEvents(token.accessToken as string, projectId)
@@ -61,9 +56,14 @@ const countGitlabApprovals = async (req: NextApiRequest, token: JWT) => {
 
   events.forEach((event) => {
     const { author } = event;
-    if (contestantsIds.includes(author.id.toString())) {
-      const approvals = usersWithApprovals[author.id.toString()].approvals;
-      usersWithApprovals[author.id.toString()].approvals = approvals + 1;
+    const authorId = author?.id?.toString();
+    if (contestantsIds.includes(authorId)) {
+      const approvals = usersWithApprovals[authorId]?.approvals || 0;
+      usersWithApprovals[authorId] = {
+        name: author.name,
+        approvals: approvals + 1,
+        avatarUrl: author?.avatar_url,
+      };
     }
   });
 

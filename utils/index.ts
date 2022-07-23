@@ -14,7 +14,8 @@ const getYYYYMMDD = (date: Date) => {
 
 const get15DaysBefore = () => {
   const newDate = new Date();
-  newDate.setDate(newDate.getDate() - 45);
+  // TODO: change back to 15 days
+  newDate.setDate(newDate.getDate() - 75);
   return getYYYYMMDD(newDate);
 };
 
