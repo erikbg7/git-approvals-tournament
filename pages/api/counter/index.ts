@@ -1,11 +1,11 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
-import type { TournamentProvider, TournamentUser } from '../../models/tournament';
-import { getProjectEvents } from '../../services/github-api';
-import { getProjectEvents as getGitlabProjectEvents } from '../../services/gitlab-api';
+import type { TournamentProvider, TournamentUser } from '../../../models/tournament';
+import { getProjectEvents } from '../../../services/github-api';
+import { getProjectEvents as getGitlabProjectEvents } from '../../../services/gitlab-api';
 
 import { getToken, JWT } from 'next-auth/jwt';
-import { PROVIDERS } from '../../models/tournament';
+import { PROVIDERS } from '../../../models/tournament';
 
 type UserWithApprovals = { name: string; approvals: number };
 type ApprovalsByUser = { approvalsByUser: UserWithApprovals[] };

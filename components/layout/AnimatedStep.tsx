@@ -14,7 +14,8 @@ const AnimatedStep: React.FC<Props> = ({ step, children }) => {
   return (
     <Box
       as={motion.div}
-      py={6}
+      pt={{ base: 0, md: 6 }}
+      pb={8}
       height={'full'}
       width={'full'}
       display={'flex'}
