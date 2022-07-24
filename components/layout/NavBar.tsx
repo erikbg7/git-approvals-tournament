@@ -61,15 +61,15 @@ const NavSignButton = () => {
   return (
     <Button
       variant={'solid'}
-      color={'white'}
-      bgColor={'#fc6d26'}
-      _hover={{ bgColor: '#e24329' }}
+      color={'black'}
+      bgColor={'#FF7300'}
+      _hover={{ bgColor: '#FF8C2E' }}
       size={'md'}
       mr={4}
       leftIcon={<AddIcon />}
       onClick={() => signIn('gitlab', { callbackUrl: '/tournament/gitlab' })}
     >
-      Sign In with Gitlab
+      Sign In
     </Button>
   );
 };
