@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import { getOrganizationParam } from '../../utils/url';
 
 type Props = {
-  id: number;
+  id: string;
   name: string;
 };
 
