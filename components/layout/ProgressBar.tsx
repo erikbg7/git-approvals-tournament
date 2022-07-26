@@ -20,7 +20,9 @@ const ProgressBar = () => {
   }, []);
 
   if (isLoading) {
-    return <Progress position={'absolute'} top={0} w={'100vw'} size="sm" isIndeterminate />;
+    return (
+      <Progress position={'absolute'} top={0} w={'100vw'} size="sm" zIndex={9} isIndeterminate />
+    );
   }
 
   return null;

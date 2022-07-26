@@ -1,6 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Box, Heading } from '@chakra-ui/react';
+import { Box, Heading, SlideFade } from '@chakra-ui/react';
 import { STEP_CONFIG, STEPS } from '../steps';
 
 type Props = {
@@ -13,7 +12,6 @@ const AnimatedStep: React.FC<Props> = ({ step, children }) => {
 
   return (
     <Box
-      as={motion.div}
       pt={{ base: 0, md: 6 }}
       pb={8}
       height={'full'}
@@ -22,17 +20,16 @@ const AnimatedStep: React.FC<Props> = ({ step, children }) => {
       flexDirection={'column'}
       justifyContent={{ base: 'center', md: 'start' }}
       alignItems={'center'}
-      initial={{ y: 30, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      exit={{ y: 50, opacity: 0 }}
     >
-      <Heading as={'h1'} fontSize={{ base: '5xl' }}>
-        {title}
-      </Heading>
-      <Heading as={'h2'} size={'md'} color={'whiteAlpha.700'}>
-        {subtitle}
-      </Heading>
-      {children}
+      <SlideFade in offsetY={20} delay={0.2}>
+        <Heading as={'h1'} fontSize={{ base: '5xl' }}>
+          {title}
+        </Heading>
+        <Heading as={'h2'} size={'md'} color={'whiteAlpha.700'}>
+          {subtitle}
+        </Heading>
+        {children}
+      </SlideFade>
     </Box>
   );
 };
