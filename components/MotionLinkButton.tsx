@@ -1,7 +1,6 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { Button, useBreakpointValue } from '@chakra-ui/react';
+import { Button, SlideFade, useBreakpointValue } from '@chakra-ui/react';
 import type { UrlObject } from 'url';
 
 type Props = { text: string; href: UrlObject };
@@ -23,19 +22,12 @@ const MotionLinkButton: React.FC<Props> = ({ text, href }) => {
 
   return (
     <Link href={href}>
-      <Button
-        as={motion.div}
-        initial={{ y: 5, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        // @ts-ignore
-        transition={{ duration: 0.1 }}
-        padding={4}
-        color={'#fc6d26'}
-        height={70}
-        {...baseProps}
-      >
-        {text}
-      </Button>
+      <SlideFade in offsetY={20}>
+        {/*@ts-ignore*/}
+        <Button padding={4} color={'#fc6d26'} height={70} {...baseProps}>
+          {text}
+        </Button>
+      </SlideFade>
     </Link>
   );
 };

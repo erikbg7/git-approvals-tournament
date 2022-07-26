@@ -1,7 +1,6 @@
 import React from 'react';
-import { Box, Heading, Text, Link } from '@chakra-ui/react';
+import { Box, Heading, Text, Link, SlideFade } from '@chakra-ui/react';
 import { ExternalLinkIcon } from '@chakra-ui/icons';
-import { motion } from 'framer-motion';
 
 import { config } from '../config';
 
@@ -16,32 +15,26 @@ const OrganizationWarning = () => {
   return (
     <>
       {showWarning && (
-        <Box
-          as={motion.div}
-          initial={{ y: 5, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          // @ts-ignore
-          transition={{ duration: 0.2 }}
-          textAlign={'center'}
-          t={20}
-        >
-          <Heading as={'h5'} size={'xs'}>
-            Can't see your organization?
-          </Heading>
-          <Text fontSize={'xs'} color={'gray.400'} lineHeight={2}>
-            We need their explicit consent to participate in the tournament
-          </Text>
-          <Text fontSize={'xs'} color={'gray.400'} lineHeight={2} mt={1}>
-            <Link
-              display={'flex'}
-              alignItems={'center'}
-              justifyContent={'center'}
-              href={config.github.requestAccessUrl}
-            >
-              Don't forget to request it. <Box as={ExternalLinkIcon} color={'white'} ml={2} />
-            </Link>
-          </Text>
-        </Box>
+        <SlideFade in offsetY={20}>
+          <Box textAlign={'center'}>
+            <Heading as={'h5'} size={'xs'}>
+              Can't see your organization?
+            </Heading>
+            <Text fontSize={'xs'} color={'gray.400'} lineHeight={2}>
+              We need their explicit consent to participate in the tournament
+            </Text>
+            <Text fontSize={'xs'} color={'gray.400'} lineHeight={2} mt={1}>
+              <Link
+                display={'flex'}
+                alignItems={'center'}
+                justifyContent={'center'}
+                href={config.github.requestAccessUrl}
+              >
+                Don't forget to request it. <Box as={ExternalLinkIcon} color={'white'} ml={2} />
+              </Link>
+            </Text>
+          </Box>
+        </SlideFade>
       )}
     </>
   );

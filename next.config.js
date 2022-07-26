@@ -13,8 +13,8 @@ const nextConfig = {
 /*
 const nextConfigDev = {
   productionBrowserSourceMaps: true, // Add to see source maps in Lighthouse
-  ...nextConfig
-}
+  ...nextConfig,
+};
 
 // npm i @next/bundle-analyzer, then export it in next.config
 
